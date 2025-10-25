@@ -1,0 +1,15 @@
+# Bỏ node_modules trong cả client và server
+client/node_modules/
+server/node_modules/
+
+# Bỏ file môi trường
+*.env
+
+# Bỏ log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Bỏ build hoặc dist nếu có
+client/build/
+server/dist/
