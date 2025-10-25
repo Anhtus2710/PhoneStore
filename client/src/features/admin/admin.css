@@ -1,0 +1,381 @@
+/* ==============================================
+   ADMIN LAYOUT - Top Navigation
+============================================== */
+
+.admin-layout {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* Top Admin Header */
+.admin-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.admin-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+/* Top Navigation Menu */
+.admin-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.admin-nav a {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.admin-nav a:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.admin-nav a.active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Main Content Area */
+.admin-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ==============================================
+   PAGE TITLE - Simple & Clean
+============================================== */
+.admin-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.admin-content > p {
+  text-align: center;
+  font-size: 1rem;
+  color: #64748b;
+  padding: 2rem;
+}
+
+/* ==============================================
+   STATS GRID - Clean Cards
+============================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Icon Styles */
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.icon-revenue {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.icon-products {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.icon-orders {
+  background: #fed7aa;
+  color: #ea580c;
+}
+
+.icon-users {
+  background: #e9d5ff;
+  color: #9333ea;
+}
+
+/* Stat Info */
+.stat-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.stat-info p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ==============================================
+   BUTTONS - Simple Style
+============================================== */
+.btn-add {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.btn-add:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* ==============================================
+   TABLE - Clean Design
+============================================== */
+.admin-table {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-table th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-table .actions button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.admin-table .actions button:hover {
+  transform: translateY(-1px);
+}
+
+.btn-edit {
+  background: #f59e0b;
+}
+
+.btn-edit:hover {
+  background: #d97706;
+}
+
+.btn-delete {
+  background: #ef4444;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* ==============================================
+   RESPONSIVE - Mobile Menu
+============================================== */
+@media (max-width: 768px) {
+  .admin-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .admin-nav {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .admin-nav a {
+    text-align: center;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table {
+    font-size: 0.85rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.75rem;
+  }
+}
+
+/* ==============================================
+   DARK MODE
+============================================== */
+@media (prefers-color-scheme: dark) {
+  .admin-layout {
+    background: #0f172a;
+  }
+
+  .admin-header {
+    background: #1e293b;
+    border-bottom-color: #334155;
+  }
+
+  .admin-logo {
+    color: #60a5fa;
+  }
+
+  .admin-nav a {
+    color: #94a3b8;
+  }
+
+  .admin-nav a:hover {
+    background: #334155;
+    color: #f1f5f9;
+  }
+
+  .admin-nav a.active {
+    background: #3b82f6;
+  }
+
+  .admin-content h1 {
+    color: #f1f5f9;
+  }
+
+  .admin-content > p {
+    color: #94a3b8;
+  }
+
+  .stat-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .icon-revenue {
+    background: #064e3b;
+    color: #34d399;
+  }
+
+  .icon-products {
+    background: #1e3a8a;
+    color: #60a5fa;
+  }
+
+  .icon-orders {
+    background: #7c2d12;
+    color: #fb923c;
+  }
+
+  .icon-users {
+    background: #581c87;
+    color: #c084fc;
+  }
+
+  .stat-info h3 {
+    color: #f1f5f9;
+  }
+
+  .stat-info p {
+    color: #94a3b8;
+  }
+
+  .admin-table {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .admin-table th {
+    background: #334155;
+    color: #cbd5e1;
+  }
+
+  .admin-table td {
+    color: #e2e8f0;
+    border-bottom-color: #334155;
+  }
+
+  .admin-table tbody tr:hover {
+    background: #334155;
+  }
+}

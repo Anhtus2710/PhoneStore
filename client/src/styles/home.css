@@ -1,0 +1,475 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* Reset và thiết lập cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.btn-logout-home {
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  color: white;
+  border: none;
+  padding: 10px 10px;
+  font-size: 10px;
+  font-weight: 300;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+/* Hero Section */
+.hero-home {
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Navbar Styles */
+.navbar-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.logo-home {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  text-decoration: none;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+.navbar-home nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.navbar-home nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 25px;
+}
+
+.navbar-home nav a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transform: translateY(-2px);
+}
+
+.navbar-home nav a::before {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar-home nav a:hover::before {
+  width: 100%;
+}
+
+/* Slideshow Container */
+.slideshow-home {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual Slides */
+.slide-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  visibility: navidden;
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1.05);
+}
+
+/* Active slide */
+.slide-home.active-home {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+/* Overlay cho text trên slide */
+.overlay-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 120px 5% 60px;
+  color: white;
+}
+
+/* Content Animation */
+.slide-home.active-home .overlay-home h1 {
+  animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+.slide-home.active-home .overlay-home p {
+  animation: slideInUp 0.8s ease-out 0.4s both;
+}
+
+.slide-home.active-home .overlay-home .btn-home {
+  animation: slideInUp 0.8s ease-out 0.6s both;
+}
+
+/* Typography */
+.overlay-home h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(
+    135deg,
+    white 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    #f0f0f0 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.overlay-home p {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  max-width: 650px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Button Styles */
+.btn-home {
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.btn-home::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+
+.btn-home:hover::before {
+  left: 0;
+}
+
+.btn-home:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+  letter-spacing: 1.5px;
+}
+
+.btn-home:active {
+  transform: translateY(-2px);
+}
+
+/* Navigation Dots */
+.dots-home {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 18px;
+  z-index: 100;
+}
+
+.dot-home {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  position: relative;
+}
+
+.dot-home::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.4s ease;
+  transform: translate(-50%, -50%);
+}
+
+.dot-home:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.3);
+  border-color: white;
+}
+
+.dot-home:hover::before {
+  width: 8px;
+  height: 8px;
+}
+
+.dot-home.active-home {
+  background: white;
+  transform: scale(1.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 107, 107, 0.8);
+}
+
+.dot-home.active-home::before {
+  width: 6px;
+  height: 6px;
+  background: #ff6b6b;
+}
+
+/* Keyframe Animations */
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Progress bar cho auto-slide */
+.dots-home::after {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1px;
+}
+
+.dots-home::before {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+  border-radius: 1px;
+  animation: progress 10s linear infinite;
+  z-index: 1;
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-home {
+    min-height: 500px;
+  }
+
+  .navbar-home {
+    padding: 15px 4%;
+  }
+
+  .logo-home {
+    font-size: 1.5rem;
+  }
+
+  .navbar-home nav {
+    gap: 1.5rem;
+  }
+
+  .navbar-home nav a {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .overlay-home {
+    padding: 100px 4% 40px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .overlay-home h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .overlay-home p {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    margin-bottom: 2rem;
+  }
+
+  .btn-home {
+    padding: 14px 32px;
+    font-size: 2rem;
+  }
+
+  .dots-home {
+    bottom: 30px;
+    gap: 15px;
+  }
+
+  .dot-home {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-home {
+    padding: 12px 3%;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .navbar-home nav {
+    gap: 1rem;
+  }
+
+  .navbar-home nav a {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+  }
+
+  .overlay-home {
+    padding: 120px 3% 30px;
+  }
+
+  .overlay-home h1 {
+    margin-bottom: 0.8rem;
+  }
+
+  .overlay-home p {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-home {
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+
+  .dots-home {
+    bottom: 20px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .navbar-home {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}

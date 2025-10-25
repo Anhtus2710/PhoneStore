@@ -1,0 +1,140 @@
+/* ==============================================
+   HOME PAGE - APPLE STYLE
+============================================== */
+
+/* --- Base Container & Typography --- */
+.apple-home-container {
+  /* Use a system font stack similar to Apple's San Francisco */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #ffffff; /* Typically white background */
+  color: #1d1d1f; /* Apple's primary dark text color */
+}
+
+/* Loading/Error States */
+.home-loading,
+.home-error {
+  min-height: calc(100vh - 75px); /* Full height minus navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #6e6e73; /* Apple's secondary text color */
+}
+.home-error { color: #bf4800; } /* Apple's error color */
+
+/* --- Hero Section Styling --- */
+.hero-section {
+  min-height: 70vh; /* Make sections tall */
+  padding: 60px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Content starts from top */
+  align-items: center;
+  border-bottom: 1px solid #d2d2d7; /* Subtle separator */
+  overflow: hidden; /* Prevent image overflow */
+}
+
+/* Specific background colors (Adapt based on product image) */
+.hero-pro { background-color: #f5f5f7; } /* Light gray for Pro */
+.hero-base { background-color: #fbfbfd; } /* Slightly off-white for base */
+.hero-se { background-color: #ffffff; } /* White for SE */
+
+/* Content within Hero */
+.hero-content {
+  max-width: 980px; /* Standard Apple content width */
+  margin-bottom: 30px;
+}
+
+.hero-title {
+  font-size: 56px; /* Large title */
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.005em;
+  color: #1d1d1f;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  font-size: 28px; /* Slightly smaller subtitle */
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: 0.007em;
+  color: #1d1d1f;
+  margin-bottom: 20px;
+}
+
+/* Call to Action Links */
+.cta-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between links */
+}
+
+.cta-link {
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.38;
+  letter-spacing: 0.011em;
+  color: #0066cc; /* Apple's blue link color */
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.cta-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* --- Hero Image Styling --- */
+.hero-image-container {
+  width: 100%;
+  max-width: 1000px; /* Limit image width */
+  margin-top: auto; /* Push image towards the bottom if space allows */
+}
+
+.hero-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto; /* Center image */
+  object-fit: contain; /* Ensure image scales correctly */
+}
+/* Specific adjustment for SE image if needed */
+.hero-image-se {
+   max-width: 70%; /* Example: Make SE image smaller */
+}
+
+
+/* --- Info Section --- */
+.info-section {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: #f5f5f7;
+}
+
+.info-section h3 {
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1068px) {
+  .hero-title { font-size: 48px; }
+  .hero-subtitle { font-size: 24px; }
+  .cta-link { font-size: 19px; }
+  .info-section h3 { font-size: 32px; }
+}
+
+@media (max-width: 734px) {
+  .hero-section { padding: 40px 15px; min-height: 60vh; }
+  .hero-title { font-size: 32px; }
+  .hero-subtitle { font-size: 19px; margin-bottom: 15px; }
+  .cta-links { gap: 15px; }
+  .cta-link { font-size: 17px; }
+  .info-section { padding: 60px 15px; }
+  .info-section h3 { font-size: 28px; }
+  /* Ensure images don't get too large */
+  .hero-image-container { max-width: 90%; }
+}

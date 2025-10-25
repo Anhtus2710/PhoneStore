@@ -1,0 +1,449 @@
+/* Import Google Fonts - Same as home.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Reset và thiết lập cơ bản - Same as home.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+/* ==============================================
+   PRODUCT DETAIL PAGE STYLES
+============================================== */
+
+.product-detail {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 229, 221, 0.5) 50%,
+      transparent 100%
+    );
+  padding: 2rem 5%;
+}
+
+/* Back Link - Style similar to navbar nav a */
+.product-detail > a {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  padding: 8px 16px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.product-detail > a:hover {
+  color: white;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  transform: translateY(-2px);
+}
+
+.product-detail > a::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.product-detail > a:hover::before {
+  width: 100%;
+}
+
+/* Loading & Error States */
+.product-detail > p {
+  text-align: center;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  padding: 3rem 2rem;
+  border-radius: 50px;
+  margin: 2rem auto;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Main Content Container */
+.product-detail-content {
+  background: linear-gradient(135deg, black 0%, #5a626a 100%);
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 0;
+  margin: 0 auto;
+  max-width: 1200px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-detail-content:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Image Section */
+.product-detail-content > div:first-child {
+  background: linear-gradient(135deg, #000305 0%, #e9ecef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-detail-content > div:first-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 107, 0.05) 0%,
+    rgba(78, 205, 196, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-detail-content:hover > div:first-child::before {
+  opacity: 1;
+}
+
+/* Image Placeholder */
+.image-placeholder {
+  width: 320px;
+  height: 320px;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 800;
+  color: #94a3b8;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-detail-content:hover .image-placeholder {
+  transform: scale(1.05);
+}
+
+/* Product Info Section */
+.product-detail-content > div:last-child {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+/* Product Title - Same style as overlay h1 */
+.product-detail-content h2 {
+  /* cân chỉnh size, màu sáng hơn và shadow để đọc tốt trên nền tối */
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 0.8rem;
+
+  /* gradient rõ ràng, tương phản tốt với nền */
+  background: linear-gradient(90deg, #ffffff 0%, #e6fff9 45%, #4ecdc4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* cải thiện độ rõ nét trên nền có họa tiết */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  letter-spacing: -0.3px;
+}
+
+/* Product Info */
+.product-detail-content p {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  line-height: 1.7;
+  color: #5a6c7d;
+}
+
+.product-detail-content p strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Price Styling - Similar to home gradient */
+.product-detail-content p:nth-child(2) {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 800;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 1rem 0;
+}
+
+/* Product Description (thay cho p:nth-child(3)) */
+.product-detail-content .product-description {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+  color: rgba(255, 255, 255, 0.98); /* sáng hơn 1 chút */
+  font-size: clamp(0.98rem, 1.8vw, 1.05rem);
+  line-height: 1.6;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  margin: 0.9rem 0;
+  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+  position: relative;
+  max-height: 280px;
+  overflow: auto;
+  border-left: 8px solid transparent; /* accent bar hơi dày hơn */
+  backdrop-filter: blur(4px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* accent vertical bar */
+.product-detail-content .product-description::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  background: linear-gradient(180deg, #ff6b6b 0%, #4ecdc4 100%);
+}
+
+/* scrollbar styling */
+.product-detail-content .product-description::-webkit-scrollbar {
+  width: 10px;
+}
+.product-detail-content .product-description::-webkit-scrollbar-track {
+  background: transparent;
+}
+.product-detail-content .product-description::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(78,205,196,0.6), rgba(255,107,107,0.6));
+  border-radius: 10px;
+}
+
+/* ensure inner paragraphs keep spacing and color */
+.product-detail-content .product-description p {
+  margin: 0 0 0.75rem 0;
+  color: inherit;
+  font-weight: 400;
+}
+
+/* Button Container */
+.product-detail-content div[style*="display"] {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Base Button Styles - smaller, compact */
+.btn-add,
+.btn-buy {
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  color: white;
+  border: none;
+  padding: 12px 28px;        /* giảm padding */
+  font-size: 0.95rem;       /* giảm cỡ chữ */
+  font-weight: 600;
+  border-radius: 36px;      /* hơi nhỏ hơn */
+  cursor: pointer;
+  transition: all 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 22px rgba(255, 107, 107, 0.35);
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  font-family: inherit;
+}
+
+/* hover/active tweaks scaled for smaller buttons */
+.btn-add:hover,
+.btn-buy:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.42);
+  letter-spacing: 1.2px;
+}
+
+.btn-add:active,
+.btn-buy:active {
+  transform: translateY(-1px);
+}
+
+/* Buy Now Button - Different gradient */
+.btn-buy {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  box-shadow: 0 10px 30px rgba(44, 62, 80, 0.4);
+}
+
+.btn-buy::before {
+  background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+}
+
+.btn-buy:hover {
+  box-shadow: 0 15px 40px rgba(44, 62, 80, 0.5);
+}
+
+/* nút xem giỏ hàng (fixed, góc trên phải) */
+.cart-fab {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 1400;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  color: #042022;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.cart-fab:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,0.4); }
+.cart-fab:active { transform: translateY(-1px); }
+
+.cart-fab .cart-ico { font-size: 20px; line-height: 1; }
+.cart-fab .cart-badge {
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #081018;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,0.06);
+}
+
+/* responsive: tránh che nội dung trên màn nhỏ */
+@media (max-width: 480px) {
+  .cart-fab { right: 12px; top: 12px; width:48px; height:48px; }
+  .cart-fab .cart-ico { font-size:18px; }
+  .cart-fab .cart-badge { right: -5px; top: -5px; min-width:18px; height:18px; font-size:11px; }
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN - Same breakpoints as home.css
+============================================== */
+@media (max-width: 768px) {
+  .product-detail {
+    padding: 15px 4%;
+  }
+  
+  .product-detail-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-detail-content > div:first-child {
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .image-placeholder {
+    width: 280px;
+    height: 280px;
+    font-size: 3.5rem;
+  }
+  
+  .product-detail-content > div:last-child {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .product-detail-content h2 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
+  
+  .btn-add,
+  .btn-buy {
+    padding: 14px 32px;
+    font-size: 1rem;
+  }
+  
+  .product-detail > a {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-detail {
+    padding: 12px 3%;
+  }
+  
+  .product-detail-content > div:first-child {
+    padding: 1rem;
+  }
+  
+  .image-placeholder {
+    width: 220px;
+    height: 220px;
+    font-size: 3rem;
+  }
+  
+  .product-detail-content > div:last-child {
+    padding: 1.5rem;
+  }
+  
+  .product-detail-content div[style*="display"] {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .btn-add,
+  .btn-buy {
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+  
+  .product-detail > a {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+  }
+}
+
+/* ==============================================
+   SMOOTH SCROLLING - Same as home.css
+============================================== */
+html {
+  scroll-behavior: smooth;
+}
