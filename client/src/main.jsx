@@ -11,7 +11,6 @@ import { CartProvider } from "./store/CartContext";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* 2. Bọc App bằng các Provider */}
       <AuthProvider>
         <CartProvider>
           <App />

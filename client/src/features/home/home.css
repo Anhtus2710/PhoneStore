@@ -1,140 +1,350 @@
 /* ==============================================
-   HOME PAGE - APPLE STYLE
+   HOME PAGE - MODERN E-COMMERCE STYLE
 ============================================== */
 
-/* --- Base Container & Typography --- */
-.apple-home-container {
-  /* Use a system font stack similar to Apple's San Francisco */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  background-color: #ffffff; /* Typically white background */
-  color: #1d1d1f; /* Apple's primary dark text color */
+.homepage-container {
+  font-family: 'Inter', sans-serif; /* Sử dụng font Inter đã import */
+  background-color: #ffffff;
+  color: #1a202c; /* Màu chữ chính (gần đen) */
 }
 
 /* Loading/Error States */
 .home-loading,
 .home-error {
-  min-height: calc(100vh - 75px); /* Full height minus navbar */
+  min-height: calc(100vh - 75px);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
-  color: #6e6e73; /* Apple's secondary text color */
+  color: #718096; /* Màu xám */
 }
-.home-error { color: #bf4800; } /* Apple's error color */
+.home-error { color: #e53e3e; } /* Màu đỏ cho lỗi */
 
-/* --- Hero Section Styling --- */
-.hero-section {
-  min-height: 70vh; /* Make sections tall */
-  padding: 60px 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Content starts from top */
-  align-items: center;
-  border-bottom: 1px solid #d2d2d7; /* Subtle separator */
-  overflow: hidden; /* Prevent image overflow */
-}
-
-/* Specific background colors (Adapt based on product image) */
-.hero-pro { background-color: #f5f5f7; } /* Light gray for Pro */
-.hero-base { background-color: #fbfbfd; } /* Slightly off-white for base */
-.hero-se { background-color: #ffffff; } /* White for SE */
-
-/* Content within Hero */
-.hero-content {
-  max-width: 980px; /* Standard Apple content width */
-  margin-bottom: 30px;
-}
-
-.hero-title {
-  font-size: 56px; /* Large title */
+/* --- General Button Styles --- */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
   font-weight: 600;
-  line-height: 1.07;
-  letter-spacing: -0.005em;
-  color: #1d1d1f;
-  margin-bottom: 10px;
-}
-
-.hero-subtitle {
-  font-size: 28px; /* Slightly smaller subtitle */
-  font-weight: 400;
-  line-height: 1.14;
-  letter-spacing: 0.007em;
-  color: #1d1d1f;
-  margin-bottom: 20px;
-}
-
-/* Call to Action Links */
-.cta-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px; /* Space between links */
-}
-
-.cta-link {
-  font-size: 21px;
-  font-weight: 400;
-  line-height: 1.38;
-  letter-spacing: 0.011em;
-  color: #0066cc; /* Apple's blue link color */
   text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #4299e1; /* Màu xanh dương chủ đạo */
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #2b6cb0; /* Xanh đậm hơn khi hover */
+}
+
+.btn-secondary {
+  background-color: #f7fafc; /* Nền trắng xám */
+  color: #2d3748; /* Chữ xám đậm */
+  border: 1px solid #e2e8f0; /* Viền xám nhạt */
+}
+.btn-secondary:hover {
+  background-color: #edf2f7; /* Xám nhạt hơn khi hover */
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* --- 1. Hero Banner --- */
+.hero-banner {
+  background: linear-gradient(135deg, #edf1ff, #764ba2); 
+  color: white;
+  min-height: 70vh; /* Chiều cao tối thiểu */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative; /* Cho ảnh nền nếu có */
+  overflow: hidden;
+}
+.hero-content {
+  max-width: 800px;
+  animation: fadeIn 1s ease-out;
+}
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+.hero-button {
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 50px; /* Nút bo tròn */
+}
+/* Optional background image styling */
+.hero-background-image {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.1; /* Làm mờ ảnh nền */
+  z-index: 0;
+}
+.hero-content { position: relative; z-index: 1; } /* Đảm bảo nội dung nổi lên */
+
+
+/* --- 2 & 3. General Section Styling --- */
+.home-section {
+  max-width: 1200px;
+  margin: 4rem auto; /* Khoảng cách giữa các section */
+  padding: 0 1rem; /* Padding hai bên */
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3748; /* Xám đậm */
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+/* Gạch chân trang trí */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background-color: #4299e1; /* Màu xanh chủ đạo */
+  border-radius: 2px;
+}
+/* Nút bấm ở cuối section */
+.section-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+/* --- Featured Products --- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Kích thước tối thiểu lớn hơn */
+  gap: 1.5rem;
+}
+
+.product-card {
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 12px; /* Bo góc ít hơn */
+  border: 1px solid #e2e8f0; /* Viền xám nhạt */
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+.product-card-img-wrapper {
+  background-color: #f7fafc; /* Nền ảnh xám nhạt */
+  overflow: hidden; /* Đảm bảo ảnh không tràn khi zoom */
+}
+.product-card-img {
+  display: block; /* Loại bỏ khoảng trống dưới ảnh */
+  width: 100%;
+  height: 250px; /* Chiều cao ảnh */
+  object-fit: cover; /* Cắt ảnh vừa khung */
+  transition: transform 0.4s ease;
+}
+.product-card:hover .product-card-img {
+  transform: scale(1.05); /* Hiệu ứng zoom nhẹ */
+}
+.product-card-info {
+  padding: 1.25rem;
+}
+.product-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  white-space: nowrap; /* Ngăn xuống dòng */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Hiện dấu ... nếu quá dài */
+}
+.product-price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4299e1; /* Màu xanh */
+}
+
+/* --- Category Highlight --- */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cột */
+  gap: 1.5rem;
+}
+
+.category-card {
+  display: block; /* Để dùng được padding */
+  text-decoration: none;
+  color: #2d3748;
+  background-color: #f7fafc; /* Nền xám nhạt */
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: relative; /* Cho ảnh nền nếu có */
+  overflow: hidden;
+}
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  border-color: #bee3f8; /* Viền xanh nhạt khi hover */
+  background-color: #ebf8ff; /* Nền xanh rất nhạt */
+}
+.category-card-content h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: #2d3748;
+}
+.category-card-content span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4299e1; /* Màu xanh */
+}
+/* Optional background image for category */
+.category-card-bg {
+  position: absolute;
+  right: -20px; bottom: -20px;
+  width: 100px; height: 100px;
+  object-fit: contain;
+  opacity: 0.1;
   transition: opacity 0.3s ease;
 }
-
-.cta-link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
+.category-card:hover .category-card-bg {
+  opacity: 0.2;
 }
 
-/* --- Hero Image Styling --- */
-.hero-image-container {
-  width: 100%;
-  max-width: 1000px; /* Limit image width */
-  margin-top: auto; /* Push image towards the bottom if space allows */
-}
-
-.hero-image {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto; /* Center image */
-  object-fit: contain; /* Ensure image scales correctly */
-}
-/* Specific adjustment for SE image if needed */
-.hero-image-se {
-   max-width: 70%; /* Example: Make SE image smaller */
-}
-
-
-/* --- Info Section --- */
-.info-section {
+/* --- Promo Banner --- */
+.promo-banner {
+  background: linear-gradient(135deg, #38b2ac, #319795); /* Gradient xanh teal */
+  color: white;
+  border-radius: 16px;
+  padding: 3rem 2rem;
   text-align: center;
-  padding: 80px 20px;
-  background-color: #f5f5f7;
+  position: relative;
+  overflow: hidden;
 }
+.promo-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+.promo-content p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+/* Optional background image */
+.promo-background-image {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.1; z-index: 0;
+}
+.promo-content { position: relative; z-index: 1; }
 
-.info-section h3 {
-  font-size: 40px;
+/* --- Store Features (Trust Badges) --- */
+.store-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  background: #ffffff; /* Nền trắng */
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+.feature-item { transition: transform 0.3s ease; }
+.feature-item:hover { transform: translateY(-5px); }
+.feature-icon-wrapper {
+  display: inline-flex; /* Để căn giữa icon */
+  background-color: #ebf8ff; /* Nền xanh nhạt */
+  color: #4299e1; /* Màu icon xanh */
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+.feature-item h3 {
+  font-size: 1.15rem;
   font-weight: 600;
-  margin-bottom: 20px;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+.feature-item p {
+  color: #718096; /* Xám nhạt hơn */
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 1068px) {
-  .hero-title { font-size: 48px; }
-  .hero-subtitle { font-size: 24px; }
-  .cta-link { font-size: 19px; }
-  .info-section h3 { font-size: 32px; }
+/* ==============================================
+   RESPONSIVE
+============================================== */
+@media (max-width: 1024px) {
+  .hero-title { font-size: 3rem; }
+  .hero-subtitle { font-size: 1.2rem; }
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 734px) {
-  .hero-section { padding: 40px 15px; min-height: 60vh; }
-  .hero-title { font-size: 32px; }
-  .hero-subtitle { font-size: 19px; margin-bottom: 15px; }
-  .cta-links { gap: 15px; }
-  .cta-link { font-size: 17px; }
-  .info-section { padding: 60px 15px; }
-  .info-section h3 { font-size: 28px; }
-  /* Ensure images don't get too large */
-  .hero-image-container { max-width: 90%; }
+@media (max-width: 768px) {
+  .hero-banner { min-height: 60vh; padding: 3rem 1.5rem; }
+  .hero-title { font-size: 2.5rem; }
+  .hero-subtitle { font-size: 1.1rem; }
+  .hero-button { font-size: 1rem; padding: 0.9rem 2rem; }
+
+  .home-section { margin: 3rem auto; padding: 0 1rem; }
+  .section-title { font-size: 1.8rem; margin-bottom: 2rem; }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .category-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .store-features { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.5rem;}
+  .promo-banner { padding: 2.5rem 1.5rem; }
+  .promo-content h2 { font-size: 1.8rem; }
+  .promo-content p { font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } /* 2 cột trên mobile */
+  .product-card-img { height: 160px; }
+  .product-card-info { padding: 1rem; }
+  .product-name { font-size: 0.9rem; }
+  .product-price { font-size: 1rem; }
+  .category-card { padding: 1.5rem; }
+  .category-card h3 { font-size: 1.1rem; }
+  .feature-item h3 { font-size: 1.1rem; }
+  .feature-item p { font-size: 0.85rem; }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

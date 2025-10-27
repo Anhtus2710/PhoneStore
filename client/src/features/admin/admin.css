@@ -379,3 +379,92 @@
     background: #334155;
   }
 }
+
+.admin-table td .admin-product-image {
+  width: 60px; /* Chiều rộng ảnh */
+  height: 60px; /* Chiều cao ảnh */
+  object-fit: cover; /* Cắt ảnh vừa khung */
+  border-radius: 8px; /* Bo góc nhẹ */
+  border: 1px solid #e2e8f0; /* Viền mờ */
+  display: block; /* Tránh khoảng trống thừa */
+}
+
+.admin-table td .no-image {
+  display: inline-block;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  color: #94a3b8; /* Màu xám */
+  background-color: #f8fafc; /* Nền xám nhạt */
+  border-radius: 4px;
+}
+
+/* Điều chỉnh padding cho ô chứa ảnh (nếu cần) */
+.admin-table td:first-child { 
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Dark Mode (Tùy chọn) */
+@media (prefers-color-scheme: dark) {
+  .admin-table td .admin-product-image {
+    border-color: #475569;
+  }
+  .admin-table td .no-image {
+     background-color: #334155;
+     color: #64748b;
+  }
+}
+
+.admin-table td .status-select {
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-width: 150px; /* Đảm bảo đủ rộng */
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.admin-table td .status-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.admin-table td .status-select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Spinner nhỏ bên cạnh select */
+.admin-table td .status-loading {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .admin-table td .status-select {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+  .admin-table td .status-select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.1);
+  }
+  .admin-table td .status-select:disabled {
+     background-color: #475569;
+     opacity: 0.6;
+  }
+}

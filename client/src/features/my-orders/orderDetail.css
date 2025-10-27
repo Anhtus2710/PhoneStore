@@ -1,0 +1,183 @@
+/* Container chung, có thể tái sử dụng */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Tiêu đề trang */
+.order-detail-page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+/* Lưới layout */
+.order-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Chia cột, sản phẩm rộng hơn */
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Thẻ thông tin (Thông tin chung, Địa chỉ) */
+.info-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 1.5rem; /* Khoảng cách giữa các thẻ */
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 0.5rem;
+}
+
+.info-card p {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+}
+.info-card p:last-child {
+  margin-bottom: 0;
+}
+.info-card p strong {
+  color: #1e293b;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+/* Trạng thái trong thẻ thông tin */
+.info-card .status {
+  margin-left: 0.5rem; /* Khoảng cách nhỏ với chữ "Trạng thái:" */
+  /* Các class status-pending, status-paid... dùng chung với myOrders.css */
+}
+
+/* --- Cột danh sách sản phẩm --- */
+.order-items-section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.order-items-list {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden; /* Để bo góc có hiệu lực */
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0; /* Không bị co lại */
+}
+
+.item-info {
+  flex-grow: 1; /* Chiếm hết không gian còn lại */
+}
+.item-info a {
+  font-weight: 600;
+  color: #1e293b;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.item-info a:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+.item-info p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.item-price {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+  min-width: 80px; /* Đảm bảo đủ rộng */
+  text-align: right;
+}
+
+/* Tổng tiền */
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #cbd5e1;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Link quay lại */
+.back-link {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .order-detail-grid {
+    grid-template-columns: 1fr; /* 1 cột trên mobile */
+  }
+  .order-detail-page h1 {
+    font-size: 1.8rem;
+  }
+  .info-card h3, .order-items-section h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* --- Dark Mode --- */
+@media (prefers-color-scheme: dark) {
+  .order-detail-page h1 { color: #f1f5f9; border-bottom-color: #334155; }
+  .info-card { background: #1e293b; border-color: #334155; }
+  .info-card h3 { color: #cbd5e1; border-bottom-color: #475569; }
+  .info-card p { color: #94a3b8; }
+  .info-card p strong { color: #e2e8f0; }
+  .order-items-list { background: #1e293b; border-color: #334155; }
+  .order-item { border-bottom-color: #334155; }
+  .item-image { border-color: #475569; }
+  .item-info a { color: #e2e8f0; }
+  .item-info a:hover { color: #60a5fa; }
+  .item-info p { color: #94a3b8; }
+  .item-price { color: #e2e8f0; }
+  .order-total { color: #f1f5f9; border-top-color: #475569; }
+  .back-link { color: #60a5fa; }
+}

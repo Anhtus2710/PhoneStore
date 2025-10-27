@@ -1,0 +1,169 @@
+/* Container chung, có thể tái sử dụng từ các trang khác */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto; /* Khoảng cách trên dưới */
+  padding: 0 1rem; /* Padding hai bên */
+}
+
+/* Tiêu đề trang */
+.my-orders-page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b; /* Màu chữ tối */
+  margin-bottom: 2rem; /* Khoảng cách dưới tiêu đề */
+  border-bottom: 1px solid #e2e8f0; /* Đường kẻ mờ */
+  padding-bottom: 1rem; /* Khoảng cách tới đường kẻ */
+}
+
+/* Thông báo lỗi (tái sử dụng class) */
+.error-message {
+  color: #dc2626; /* Màu đỏ */
+  background: #fee2e2; /* Nền đỏ nhạt */
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  border-left: 3px solid #dc2626; /* Viền đỏ bên trái */
+}
+
+/* Bảng đơn hàng */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse; /* Gộp đường viền */
+  margin-top: 1rem;
+  font-size: 0.95rem; /* Kích thước chữ trong bảng */
+  background: #ffffff; /* Nền trắng */
+  border-radius: 12px; /* Bo góc */
+  overflow: hidden; /* Ẩn phần tràn khi bo góc */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng đổ nhẹ */
+  border: 1px solid #e2e8f0; /* Viền xám nhạt */
+}
+
+/* Tiêu đề cột (th) và ô dữ liệu (td) */
+.orders-table th,
+.orders-table td {
+  padding: 1rem 1.25rem; /* Padding trong ô */
+  text-align: left; /* Căn lề trái */
+  border-bottom: 1px solid #f1f5f9; /* Đường kẻ ngang giữa các hàng */
+}
+
+/* Style riêng cho tiêu đề cột */
+.orders-table th {
+  background: #f8fafc; /* Nền xám rất nhạt */
+  color: #64748b; /* Màu chữ xám */
+  font-weight: 600; /* Đậm vừa */
+  font-size: 0.8rem; /* Chữ nhỏ hơn */
+  text-transform: uppercase; /* Viết hoa */
+  letter-spacing: 0.5px; /* Giãn cách chữ */
+}
+
+/* Bỏ đường kẻ dưới của hàng cuối cùng */
+.orders-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hiệu ứng khi di chuột qua hàng */
+.orders-table tbody tr:hover {
+  background: #f8fafc; /* Đổi nền thành xám nhạt */
+}
+
+/* Link trong ô mã đơn hàng */
+.orders-table td a {
+  color: #3b82f6; /* Màu xanh dương */
+  text-decoration: none; /* Bỏ gạch chân */
+  font-weight: 500; /* Đậm nhẹ */
+}
+.orders-table td a:hover {
+  text-decoration: underline; /* Thêm gạch chân khi hover */
+}
+
+/* Style cho trạng thái đơn hàng */
+.status {
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  display: inline-block; /* Để padding và background có hiệu lực */
+  text-transform: capitalize; /* Viết hoa chữ đầu */
+}
+.status-pending { background-color: #fef3c7; color: #b45309; } /* Vàng */
+.status-paid { background-color: #d1fae5; color: #047857; } /* Xanh lá */
+.status-shipped { background-color: #dbeafe; color: #1d4ed8; } /* Xanh dương */
+.status-cancelled { background-color: #fee2e2; color: #b91c1c; } /* Đỏ */
+
+/* Style cho nút Hủy đơn */
+.btn-cancel-order {
+  background: #fee2e2; /* Nền đỏ nhạt */
+  color: #dc2626; /* Chữ đỏ đậm */
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+.btn-cancel-order:hover {
+  background: #fecaca; /* Đỏ nhạt hơn khi hover */
+}
+.btn-cancel-order:disabled {
+  background: #e5e7eb; /* Màu xám khi bị vô hiệu hóa */
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .orders-table {
+    display: block; /* Chuyển thành block để cuộn được */
+    overflow-x: auto; /* Cho phép cuộn ngang */
+    white-space: nowrap; /* Ngăn các ô xuống dòng */
+    -webkit-overflow-scrolling: touch; /* Cuộn mượt trên iOS */
+  }
+  .orders-table th,
+  .orders-table td {
+    white-space: nowrap; /* Đảm bảo không xuống dòng */
+    padding: 0.75rem 1rem;
+  }
+  .my-orders-page h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* --- Dark Mode --- */
+@media (prefers-color-scheme: dark) {
+  .orders-table {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .orders-table th {
+    background: #334155;
+    color: #cbd5e1;
+  }
+  .orders-table td {
+    border-bottom-color: #334155;
+    color: #e2e8f0;
+  }
+  .orders-table tbody tr:hover {
+    background: #334155;
+  }
+  .orders-table td a {
+    color: #60a5fa; /* Xanh nhạt hơn trong dark mode */
+  }
+  .status-pending { background-color: #78350f; color: #fef3c7; }
+  .status-paid { background-color: #064e3b; color: #a7f3d0; }
+  .status-shipped { background-color: #1e3a8a; color: #bfdbfe; }
+  .status-cancelled { background-color: #7f1d1d; color: #fecaca; }
+
+  .btn-cancel-order {
+    background: #7f1d1d;
+    color: #fecaca;
+  }
+  .btn-cancel-order:hover {
+    background: #991b1b;
+  }
+   .btn-cancel-order:disabled {
+    background: #374151;
+    color: #6b7280;
+  }
+}

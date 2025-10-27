@@ -1,118 +1,138 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import api from "../../api/axios.js";
-import "./home.css";
+import api from "../../api/axios.js"; // Import cấu hình axios
+import { getCategories } from "../../api/categoryApi"; // Import API lấy danh mục
+import "./home.css"; // Import file CSS mới
+import { FaShippingFast, FaTags, FaHeadset } from "react-icons/fa"; // Icons cho cam kết
 
+export default function TrangChu() {
+  // State lưu sản phẩm nổi bật và danh mục
+  const [sanPhamNoiBat, datSanPhamNoiBat] = useState([]);
+  const [danhMuc, datDanhMuc] = useState([]);
+  const [dangTai, datDangTai] = useState(true);
+  const [loi, datLoi] = useState(null);
 
-const LATEST_PRO_SLUG = "iphone-15-pro-max-256gb";
-const LATEST_BASE_SLUG = "iphone-17-pro";
-const SE_SLUG = "iphone-se";
-
-export default function HomeFeature() {
-
-  const [latestPro, setLatestPro] = useState(null);
-  const [latestBase, setLatestBase] = useState(null);
-  const [iphoneSE, setIphoneSE] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-
+  // Tải dữ liệu sản phẩm và danh mục
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      setError(null);
+    const taiDuLieu = async () => {
+      datDangTai(true);
+      datLoi(null);
       try {
-        const [proRes, baseRes, seRes] = await Promise.all([
-          api.get(`/products/slug/${LATEST_PRO_SLUG}`).catch(e => null),
-          api.get(`/products/slug/${LATEST_BASE_SLUG}`).catch(e => null),
-          api.get(`/products/slug/${SE_SLUG}`).catch(e => null)
-        ]);
+        // Lấy 3 danh mục đầu tiên
+        const phanHoiDanhMuc = await getCategories();
+        datDanhMuc(phanHoiDanhMuc.data.slice(0, 3)); // Lấy 3 danh mục
 
-        if (proRes) setLatestPro(proRes.data);
-        if (baseRes) setLatestBase(baseRes.data);
-        if (seRes) setIphoneSE(seRes.data);
-
+        // Lấy 4 sản phẩm làm nổi bật
+        const phanHoiSanPham = await api.get("/products");
+        datSanPhamNoiBat(phanHoiSanPham.data.slice(0, 4)); // Lấy 4 sản phẩm
       } catch (err) {
-        console.error("Error fetching homepage products:", err);
-        setError("Không thể tải thông tin sản phẩm.");
+        console.error("Lỗi tải dữ liệu trang chủ:", err);
+        datLoi("Không thể tải dữ liệu trang chủ.");
       } finally {
-        setLoading(false);
+        datDangTai(false);
       }
     };
-    fetchProducts();
+    taiDuLieu();
   }, []);
 
-
-  const renderProductLinks = (product) => (
-    <div className="cta-links">
-      <Link to={`/product/${product._id}`} className="cta-link learn-more">
-        Tìm hiểu thêm &gt;
-      </Link>
-      <Link to={`/product/${product._id}`} className="cta-link buy">
-        Mua &gt;
-      </Link>
-    </div>
-  );
-
-  if (loading) {
-    return <div className="home-loading">Đang tải...</div>; // Simple loading state
+  if (dangTai) {
+    return <div className="home-loading">Đang tải...</div>;
   }
-  if (error) {
-    return <div className="home-error">{error}</div>;
+  if (loi) {
+    return <div className="home-error">{loi}</div>;
   }
 
   return (
-    <div className="apple-home-container">
-      {/* === Section 1: Latest Pro Model === */}
-      {latestPro && (
-        <section className="hero-section hero-pro">
-          <div className="hero-content">
-            <h2 className="hero-title">{latestPro.name}</h2>
-            <p className="hero-subtitle">Pro. Mạnh mẽ vượt trội.</p>
-            {renderProductLinks(latestPro)}
-          </div>
-          <div className="hero-image-container">
-            {/* Use high-quality image */}
-            <img src={`http://localhost:5000${latestPro.image}`} alt={latestPro.name} className="hero-image" />
-          </div>
-        </section>
-      )}
-
-      {/* === Section 2: Latest Base Model === */}
-      {latestBase && (
-        <section className="hero-section hero-base">
-          <div className="hero-content">
-            <h2 className="hero-title">{latestBase.name}</h2>
-            <p className="hero-subtitle">Một đẳng cấp mới.</p>
-            {renderProductLinks(latestBase)}
-          </div>
-          <div className="hero-image-container">
-            <img src={`http://localhost:5000${latestBase.image}`} alt={latestBase.name} className="hero-image" />
-          </div>
-        </section>
-      )}
-
-      {/* === Section 3: iPhone SE (or another featured product) === */}
-      {iphoneSE && (
-        <section className="hero-section hero-se">
-          <div className="hero-content">
-            <h2 className="hero-title">{iphoneSE.name}</h2>
-            <p className="hero-subtitle">Hiệu năng mạnh mẽ. Giá trị hấp dẫn.</p>
-            {renderProductLinks(iphoneSE)}
-          </div>
-          <div className="hero-image-container">
-            <img src={`http://localhost:5000${iphone17.image}`} alt={iphoneSE.name} className="hero-image hero-image-se" />
-          </div>
-        </section>
-      )}
-
-      {/* === Section 4: Optional "Why Apple" or Accessories section === */}
-      <section className="info-section">
-        {/* Add content here like links to accessories, compare models, etc. */}
-        <h3>So sánh các dòng máy iPhone</h3>
-        <Link to="/catalog" className="cta-link">Xem tất cả &gt;</Link>
+    <div className="homepage-container">
+      <section className="hero-banner">
+        <div className="hero-content">
+          <h1 className="hero-title">Bộ Sưu Tập Mới Nhất</h1>
+          <p className="hero-subtitle">Khám phá những sản phẩm công nghệ đỉnh cao.</p>
+          <Link to="/catalog" className="btn btn-primary hero-button">
+            Mua sắm ngay
+          </Link>
+        </div>
+        {/* <img src="/images/congtyapple.png" alt="Hero background" className="hero-background-image" /> */}
       </section>
 
+      {/* --- 2. Sản phẩm nổi bật --- */}
+      <section className="home-section featured-products">
+        <h2 className="section-title">Sản phẩm nổi bật</h2>
+        <div className="product-grid">
+          {sanPhamNoiBat.map((sanPham) => (
+            <Link className="product-card" key={sanPham._id} to={`/product/${sanPham.slug}`}>
+              <div className="product-card-img-wrapper">
+                <img
+                  src={`http://localhost:5000${sanPham.image}`}
+                  alt={sanPham.name}
+                  className="product-card-img"
+                  loading="lazy" // Tải ảnh lười biếng
+                />
+              </div>
+              <div className="product-card-info">
+                <h3 className="product-name">{sanPham.name}</h3>
+                <p className="product-price">{(sanPham.price || 0).toLocaleString()} đ</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="section-cta">
+          <Link to="/catalog" className="btn btn-secondary">
+            Xem tất cả sản phẩm
+          </Link>
+        </div>
+      </section>
+
+      {/* --- 3. Khối Danh mục --- */}
+      <section className="home-section shop-by-category">
+        <h2 className="section-title">Danh mục sản phẩm</h2>
+        <div className="category-grid">
+          {danhMuc.map((muc) => (
+            // Sửa lại thuộc tính 'to' của Link
+            <Link
+              className="category-card"
+              key={muc._id}
+              to={`/catalog?category=${muc._id}`}
+            >
+              <div className="category-card-content">
+                <h3>{muc.name}</h3>
+                <span>Xem ngay &rarr;</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* --- 4. Banner Khuyến mãi/Quảng cáo --- */}
+      <section className="home-section promo-banner">
+        <div className="promo-content">
+          <h2>Ưu đãi đặc biệt mùa hè!</h2>
+          <p>Giảm giá lên đến 30% cho các phụ kiện chọn lọc.</p>
+          <Link to="/catalog" className="btn btn-outline">
+            Xem khuyến mãi
+          </Link>
+        </div>
+        {/* <img src="/images/promo-banner-bg.jpg" alt="Promotion Banner" className="promo-background-image"/> */}
+      </section>
+
+      {/* --- 5. Cam kết Cửa hàng (Trust Badges) --- */}
+      <section className="home-section store-features">
+        <div className="feature-item">
+          <div className="feature-icon-wrapper"><FaShippingFast /></div>
+          <h3>Giao hàng toàn quốc</h3>
+          <p>Nhanh chóng, tiện lợi, miễn phí cho đơn hàng lớn.</p>
+        </div>
+        <div className="feature-item">
+          <div className="feature-icon-wrapper"><FaTags /></div>
+          <h3>Ưu đãi hấp dẫn</h3>
+          <p>Luôn cập nhật khuyến mãi và giá tốt nhất.</p>
+        </div>
+        <div className="feature-item">
+          <div className="feature-icon-wrapper"><FaHeadset /></div>
+          <h3>Hỗ trợ tận tâm</h3>
+          <p>Đội ngũ tư vấn sẵn sàng hỗ trợ 24/7.</p>
+        </div>
+      </section>
     </div>
   );
 }

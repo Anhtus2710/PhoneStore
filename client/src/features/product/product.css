@@ -1,120 +1,171 @@
+/* ==============================================
+   PRODUCT DETAIL PAGE - MODERN STYLE
+============================================== */
+
+/* --- Container --- */
 .product-detail {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 1100px; /* Tăng chiều rộng tối đa */
+  margin: 3rem auto; /* Tăng khoảng cách trên dưới */
+  padding: 0 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font hệ thống */
+  color: #1d1d1f; /* Màu chữ chính */
 }
 
+/* --- Back Link --- */
 .product-detail > a {
   display: inline-block;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem; /* Tăng khoảng cách */
   text-decoration: none;
-  color: #3b82f6;
-  font-weight: 500;
+  color: #0066cc; /* Màu link xanh của Apple */
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.product-detail > a:hover {
+  text-decoration: underline;
 }
 
+/* --- Main Content Grid --- */
 .product-detail-content {
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 3rem;
-  background: #fff;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  grid-template-columns: 1fr 1fr; /* Chia 50/50 */
+  gap: 4rem; /* Tăng khoảng cách giữa ảnh và chữ */
+  background: #fbfbfd; /* Nền trắng hơi xám nhẹ */
+  padding: 3rem;
+  border-radius: 20px; /* Bo góc nhiều hơn */
+  border: 1px solid #d2d2d7; /* Viền xám nhạt */
+}
+
+/* --- Image Area --- */
+.hero-image-container { /* Thống nhất class với home.css */
+  display: flex; /* Căn giữa ảnh nếu cần */
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* Nền trắng cho ảnh */
+  border-radius: 16px; /* Bo góc ảnh */
+  padding: 1rem; /* Padding nhỏ quanh ảnh */
+  border: 1px solid #e2e8f0;
+}
+
+.hero-image { /* Thống nhất class với home.css */
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain; /* Đảm bảo ảnh vừa khung */
+  border-radius: 8px; /* Bo góc nhẹ cho ảnh */
 }
 
 .image-placeholder {
   width: 100%;
-  padding-top: 100%; /* Tạo tỷ lệ 1:1 */
-  background: #f1f5f9;
-  border-radius: 12px;
+  aspect-ratio: 1 / 1; /* Giữ tỷ lệ vuông */
+  background: #f5f5f7; /* Nền xám nhạt */
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 5rem;
-  font-weight: 800;
-  color: #cbd5e1;
-}
-
-.product-detail-content h2 {
-  font-size: 2.2rem;
+  font-size: 4rem; /* Giảm kích thước chữ placeholder */
   font-weight: 700;
-  color: #1e293b;
+  color: #d2d2d7; /* Màu chữ placeholder nhạt hơn */
+}
+
+/* --- Info Area --- */
+.hero-content { /* Thống nhất class với home.css */
+  padding-top: 1rem; /* Thêm padding nhỏ ở trên */
+}
+
+.hero-title { /* Thống nhất class với home.css */
+  font-size: 2.5rem; /* Giảm nhẹ */
+  font-weight: 600;
+  line-height: 1.1;
+  color: #1d1d1f;
   margin-bottom: 1rem;
 }
 
-.product-detail-content p {
-  font-size: 1.1rem;
-  color: #475569;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+.hero-subtitle { /* Thống nhất class với home.css */
+  font-size: 1.1rem; /* Giảm nhẹ */
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6e6e73; /* Màu xám phụ */
+  margin-bottom: 1.2rem;
 }
 
-.product-detail-content p strong {
-  color: #1e293b;
+.hero-subtitle strong {
+  color: #1d1d1f; /* Màu chữ chính cho phần nhấn mạnh */
+  font-weight: 600;
 }
 
-/* Nút bấm */
-.btn-add,
-.btn-buy {
-  padding: 1rem 2rem;
-  border: none;
+/* --- Action Buttons --- */
+.cta-links { /* Thống nhất class với home.css */
+  display: flex;
+  flex-direction: column; /* Xếp chồng nút */
+  gap: 0.8rem; /* Khoảng cách giữa các nút */
+  margin-top: 2rem;
+}
+
+.cta-link { /* Style chung cho các nút/link */
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
+  text-decoration: none;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-.btn-add {
-  background: #eef2ff;
-  color: #4338ca;
-  border: 1px solid #c7d2fe;
-}
-.btn-add:hover {
-  background: #e0e7ff;
-}
-
-.btn-buy {
-  background: #3b82f6;
+/* Nút Mua (Màu xanh nổi bật) */
+.cta-link.buy {
+  background-color: #0066cc;
   color: white;
 }
-.btn-buy:hover {
-  background: #2563eb;
+.cta-link.buy:hover {
+  background-color: #0056b3; /* Đậm hơn khi hover */
 }
 
-/* Nút giỏ hàng nổi */
+/* Nút Thêm vào giỏ (Nền trắng viền xanh) */
+.cta-link.learn-more { /* Đổi tên class nếu cần */
+  background-color: #ffffff;
+  color: #0066cc;
+  border: 1px solid #0066cc;
+}
+.cta-link.learn-more:hover {
+  background-color: #f5faff; /* Nền xanh rất nhạt khi hover */
+}
+
+/* --- Floating Cart Button (Giữ nguyên hoặc tinh chỉnh nhẹ) --- */
 .cart-fab {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  width: 60px;
-  height: 60px;
-  background: #3b82f6;
+  width: 55px; /* Nhỏ hơn chút */
+  height: 55px;
+  background: #0066cc; /* Đồng bộ màu xanh */
   color: white;
   border: none;
   border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.4);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
+  transition: transform 0.3s ease;
 }
-
-.cart-ico {
-  font-size: 1.5rem;
+.cart-fab:hover {
+  transform: scale(1.1); /* Phóng to nhẹ khi hover */
 }
-
+.cart-ico { font-size: 1.4rem; }
 .cart-badge {
   position: absolute;
-  top: 0;
-  right: 0;
-  background: #ef4444;
+  top: -2px; /* Dịch lên một chút */
+  right: -2px; /* Dịch sang phải một chút */
+  background: #e30000; /* Màu đỏ nổi bật hơn */
   color: white;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 0.8rem;
+  width: 22px; /* Nhỏ hơn */
+  height: 22px;
+  font-size: 0.75rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -122,14 +173,26 @@
   border: 2px solid white;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* --- Responsive --- */
+@media (max-width: 900px) {
   .product-detail-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Chuyển thành 1 cột */
     gap: 2rem;
-    padding: 1.5rem;
+    padding: 2rem;
   }
-  .product-detail-content h2 {
-    font-size: 1.8rem;
-  }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .cta-links { flex-direction: row; } /* Nút nằm ngang trên mobile */
+  .cta-link { flex: 1; } /* Chia đều chiều rộng */
+}
+
+@media (max-width: 480px) {
+  .product-detail { margin: 1.5rem auto; padding: 0 1rem; }
+  .product-detail-content { padding: 1.5rem; }
+  .hero-title { font-size: 1.8rem; }
+  .hero-subtitle { font-size: 0.95rem; }
+  .cta-link { font-size: 0.9rem; padding: 0.8rem 1rem; }
+  .cart-fab { width: 50px; height: 50px; bottom: 1.5rem; right: 1.5rem; }
+  .cart-ico { font-size: 1.2rem; }
+  .cart-badge { width: 20px; height: 20px; font-size: 0.7rem; }
 }
