@@ -1,48 +1,73 @@
+// src/App.jsx
+import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// --- Layouts (Khung sườn) ---
+import MainLayout from "./layouts/MainLayout"; // Layout cho User
+import AdminLayout from "./layouts/AdminLayout"; // Layout cho Admin
 
+// --- Pages (User) ---
+// (Bạn cần tạo các file "Page" này trong src/pages/)
 import HomePage from "./pages/HomePage";
 import CatalogPage from "./pages/CatalogPage";
-import ProductPage from "./pages/ProductPage"; // Trang chi tiết sản phẩm
-import CartPage from "./pages/CartPage";     // Trang giỏ hàng
-import CheckoutPage from "./pages/CheckoutPage"; // Trang thanh toán
-import RegisterPage from "./pages/RegisterPage"; // Trang đăng ký
-import LoginPage from "./pages/LoginPage";     // Trang đăng nhập
+import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import MyOrdersPage from "./pages/MyOrdersPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
+// Placeholder (Tạo file ProfilePage.jsx nếu cần)
+const ProfilePage = () => <div style={{ padding: '3rem', maxWidth: '1200px', margin: 'auto' }}><h1>Trang thông tin cá nhân (chưa tạo)</h1></div>;
 
-import AdminDashboardPage from "./pages/AdminDashboardPage"; // Bảng điều khiển
-import AdminProductsPage from "./pages/AdminProductsPage";   // Quản lý sản phẩm
-import AdminAddProductPage from "./pages/AdminAddProductPage";    // Thêm sản phẩm
-import AdminEditProductPage from "./pages/AdminEditProductPage";   // Sửa sản phẩm
-import AdminUsersPage from "./pages/AdminUsersPage";       // Quản lý người dùng
-import AdminOrdersPage from "./pages/AdminOrdersPage";      // Quản lý đơn hàng
+
+// --- Pages (Admin) ---
+// (Bạn cần tạo các file "Page" này trong src/pages/)
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminProductsPage from "./pages/AdminProductsPage";
+import AdminAddProductPage from "./pages/AdminAddProductPage";
+import AdminEditProductPage from "./pages/AdminEditProductPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
+
+// --- Pages (Auth - Không có Layout) ---
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 export default function App() {
   return (
     <Routes>
+      {/* --- TUYẾN ĐƯỜNG USER (Bọc trong MainLayout) --- */}
+      {/* Tất cả các route bên trong này sẽ tự động có Navbar/Footer */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/product/:slug" element={<ProductPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/my-orders" element={<MyOrdersPage />} />
+        <Route path="/order/:id" element={<OrderDetailPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Route>
 
-      <Route path="/" element={<Navigate to="/home" replace />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/catalog" element={<CatalogPage />} />
-      <Route path="/product/:slug" element={<ProductPage />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/order/:id" element={<OrderDetailPage />} />
+      {/* --- TUYẾN ĐƯỜNG ADMIN (Bọc trong AdminLayout) --- */}
+      {/* Tất cả các route bên trong này sẽ tự động có Sidebar */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="home" replace />} />
+        <Route path="home" element={<AdminDashboardPage />} />
+        <Route path="products" element={<AdminProductsPage />} />
+        <Route path="products/add" element={<AdminAddProductPage />} />
+        <Route path="products/edit/:id" element={<AdminEditProductPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="orders" element={<AdminOrdersPage />} />
+      </Route>
 
+      {/* --- TUYẾN ĐƯỜNG AUTH (Không có Layout) --- */}
+      {/* Các trang này có giao diện toàn màn hình riêng */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-
-      <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
-      <Route path="/admin/home" element={<AdminDashboardPage />} />
-      <Route path="/admin/products" element={<AdminProductsPage />} />
-      <Route path="/admin/products/add" element={<AdminAddProductPage />} />
-      <Route path="/admin/products/edit/:id" element={<AdminEditProductPage />} />
-      <Route path="/admin/users" element={<AdminUsersPage />} />
-      <Route path="/admin/orders" element={<AdminOrdersPage />} />
-
+      {/* --- 404 Not Found --- */}
       <Route path="*" element={<Navigate to="/home" replace />} />
-
     </Routes>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api/axios.js";
 import { useCart } from "../../store/CartContext"; // Dùng Cart Context
 import { useAuth } from "../../store/AuthContext"; // Dùng Auth Context
-import "./checkout.css"; // Tạo file css mới
+
 
 export default function CheckoutFeature() {
   const navigate = useNavigate();

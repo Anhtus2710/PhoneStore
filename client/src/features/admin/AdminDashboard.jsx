@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getStats } from "../../api/adminApi";
-import "./admin.css"; // Import CSS chung
+
 
 // 1. Import các icon
-import { 
-  FaDollarSign, 
-  FaBoxOpen, 
-  FaShoppingCart, 
-  FaUsers 
+import {
+  FaDollarSign,
+  FaBoxOpen,
+  FaShoppingCart,
+  FaUsers
 } from "react-icons/fa";
 
 export default function AdminDashboard() {
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
               <p>Người dùng</p>
             </div>
           </div>
-          
+
         </div>
       ) : (
         <p>⚠️ Không lấy được dữ liệu thống kê.</p>
@@ -87,5 +87,5 @@ export default function AdminDashboard() {
 
       {/* Bạn có thể thêm các biểu đồ hoặc bảng "Đơn hàng mới" ở đây */}
     </>
-  ); 
+  );
 }  

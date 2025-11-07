@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@import "tailwindcss";
+
+/* @import "./features/home/home.css"; */
+/* @import "./features/catalog/catalog.css"; */
+/* @import "./features/product/product.css"; */
+/* @import "./features/cart/cart.css"; */
+/* @import "./features/auth/login.css"; */
+
+@layer base {
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+}

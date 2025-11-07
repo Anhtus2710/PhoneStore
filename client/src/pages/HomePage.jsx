@@ -1,11 +1,7 @@
 import React from 'react';
-import MainLayout from '../layouts/MainLayout';
-import HomeFeature from '../features/home/Home';
+// Trang này không cần layout vì MainLayout đã bọc nó ở App.jsx
+import HomeFeature from '../features/home/Home'; // Import component "TrangChu"
 
 export default function HomePage() {
-  return (
-    <MainLayout>
-      <HomeFeature />
-    </MainLayout>
-  );
+  return <HomeFeature />;
 }

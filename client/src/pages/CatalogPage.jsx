@@ -1,11 +1,6 @@
 import React from 'react';
-import MainLayout from '../layouts/MainLayout';
-import CatalogFeature from '../features/catalog/Catalog';
+import CatalogFeature from '../features/catalog/Catalog'; // Import feature Catalog
 
 export default function CatalogPage() {
-  return (
-    <MainLayout>
-      <CatalogFeature />
-    </MainLayout>
-  );
-} 
+  return <CatalogFeature />;
+}

@@ -1,11 +1,6 @@
 import React from 'react';
-import MainLayout from '../layouts/MainLayout';
-import LoginFeature from '../features/auth/Login';
+import LoginFeature from '../features/auth/Login'; // Import feature Login
 
 export default function LoginPage() {
-  return (
-    <MainLayout>
-      <LoginFeature />
-    </MainLayout>
-  );
+  return <LoginFeature />;
 }

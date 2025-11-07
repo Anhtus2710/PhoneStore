@@ -1,171 +1,167 @@
-/* ==============================================
-   ADMIN LAYOUT - Top Navigation (Simple & Clean)
-============================================== */
+/* ============================================
+   ADMIN LAYOUT - Modern Sidebar Design
+============================================ */
 
+/* Layout Container */
 .admin-layout {
+  display: flex;
   min-height: 100vh;
   background: #f8fafc;
-  display: flex;
-  flex-direction: column;
 }
 
-/* Loading Container */
+/* Loading State */
 .admin-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #3b82f6;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .admin-container p {
   color: white;
   font-size: 1.1rem;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   padding: 1.5rem 2.5rem;
   border-radius: 12px;
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ==============================================
-   TOP HEADER
-============================================== */
-.admin-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+/* ============================================
+   SIDEBAR
+============================================ */
+.admin-sidebar {
+  width: 260px;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
   position: sticky;
   top: 0;
-  z-index: 100;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
 }
 
-.admin-header-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.admin-logo {
+.admin-sidebar h2 {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #3b82f6;
-  cursor: pointer;
-  user-select: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-/* Navigation Menu */
+/* Navigation */
 .admin-nav {
-  display: flex;
-  gap: 0.5rem;
   flex: 1;
 }
 
-.admin-nav > div {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+.admin-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
   color: #64748b;
   font-weight: 600;
   font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.admin-nav > div:hover {
+.admin-nav a:hover {
   background: #f1f5f9;
   color: #1e293b;
+  transform: translateX(4px);
 }
 
-.admin-nav > div.active {
-  background: #3b82f6;
+.admin-nav a.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* Logout Button */
 .btn-logout {
-  padding: 0.75rem 1.5rem;
-  background: #ef4444;
-  color: white;
+  width: 100%;
+  padding: 0.875rem;
+  background: #fee2e2;
+  color: #ef4444;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
-  cursor: pointer;
   font-size: 0.95rem;
+  cursor: pointer;
   transition: all 0.2s ease;
+  margin-top: 1rem;
 }
 
 .btn-logout:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* ==============================================
-   MAIN CONTENT AREA
-============================================== */
+/* ============================================
+   MAIN CONTENT
+============================================ */
 .admin-content {
   flex: 1;
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
   padding: 2rem;
+  overflow-y: auto;
 }
 
-/* ==============================================
-   PAGE TITLE
-============================================== */
 .admin-content h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.admin-content > p {
-  text-align: center;
-  font-size: 1rem;
-  color: #64748b;
-  padding: 2rem;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px dashed #cbd5e1;
-}
-
-/* ==============================================
+/* ============================================
    STATS GRID
-============================================== */
+============================================ */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .stat-card {
-  background: #ffffff;
+  background: white;
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Icon Styles */
 .stat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,89 +169,82 @@
   flex-shrink: 0;
 }
 
-.icon-revenue {
-  background: #dcfce7;
-  color: #16a34a;
-}
+.icon-revenue { background: #dcfce7; color: #16a34a; }
+.icon-products { background: #dbeafe; color: #2563eb; }
+.icon-orders { background: #fed7aa; color: #ea580c; }
+.icon-users { background: #e9d5ff; color: #9333ea; }
 
-.icon-products {
-  background: #dbeafe;
-  color: #2563eb;
-}
-
-.icon-orders {
-  background: #fed7aa;
-  color: #ea580c;
-}
-
-.icon-users {
-  background: #e9d5ff;
-  color: #9333ea;
-}
-
-/* Stat Info */
 .stat-info h3 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #1e293b;
-  margin: 0;
+  margin: 0 0 0.25rem;
 }
 
 .stat-info p {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: #64748b;
   margin: 0;
   font-weight: 500;
 }
 
-/* ==============================================
+/* ============================================
    BUTTONS
-============================================== */
+============================================ */
 .btn-add {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.875rem 1.75rem;
+  border-radius: 10px;
   font-weight: 600;
-  cursor: pointer;
   font-size: 0.95rem;
+  cursor: pointer;
   margin-bottom: 1.5rem;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .btn-add:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
 }
 
-/* ==============================================
+/* ============================================
    TABLE
-============================================== */
+============================================ */
 .admin-table {
   width: 100%;
-  background: #ffffff;
+  background: white;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  border-collapse: separate;
-  border-spacing: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .admin-table th,
 .admin-table td {
   padding: 1rem 1.25rem;
   text-align: left;
-  border-bottom: 1px solid #f1f5f9;
 }
 
 .admin-table th {
   background: #f8fafc;
   color: #64748b;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-table td {
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-table tbody tr {
+  transition: background 0.2s ease;
 }
 
 .admin-table tbody tr:hover {
@@ -276,14 +265,10 @@
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-weight: 600;
-  cursor: pointer;
   font-size: 0.85rem;
   color: white;
+  cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.admin-table .actions button:hover {
-  transform: translateY(-1px);
 }
 
 .btn-edit {
@@ -292,6 +277,7 @@
 
 .btn-edit:hover {
   background: #d97706;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -300,30 +286,23 @@
 
 .btn-delete:hover {
   background: #dc2626;
+  transform: translateY(-1px);
 }
 
-/* ==============================================
+/* ============================================
    RESPONSIVE
-============================================== */
+============================================ */
 @media (max-width: 768px) {
-  .admin-header-content {
+  .admin-layout {
     flex-direction: column;
-    align-items: stretch;
-    padding: 1rem;
-    gap: 1rem;
   }
 
-  .admin-logo {
-    text-align: center;
-  }
-
-  .admin-nav {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .admin-nav > div {
-    text-align: center;
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   .admin-content {
@@ -344,86 +323,40 @@
   }
 }
 
-/* ==============================================
+/* ============================================
    DARK MODE
-============================================== */
+============================================ */
 @media (prefers-color-scheme: dark) {
   .admin-layout {
     background: #0f172a;
   }
 
-  .admin-container {
-    background: #1e3a8a;
-  }
-
-  .admin-header {
+  .admin-sidebar {
     background: #1e293b;
-    border-bottom-color: #334155;
+    border-right-color: #334155;
   }
 
-  .admin-logo {
-    color: #60a5fa;
-  }
-
-  .admin-nav > div {
+  .admin-nav a {
     color: #94a3b8;
   }
 
-  .admin-nav > div:hover {
+  .admin-nav a:hover {
     background: #334155;
     color: #f1f5f9;
-  }
-
-  .admin-nav > div.active {
-    background: #3b82f6;
   }
 
   .admin-content h1 {
     color: #f1f5f9;
   }
 
-  .admin-content > p {
-    color: #94a3b8;
+  .stat-card,
+  .admin-table {
     background: #1e293b;
     border-color: #334155;
-  }
-
-  .stat-card {
-    background: #1e293b;
-    border-color: #334155;
-  }
-
-  .icon-revenue {
-    background: #064e3b;
-    color: #34d399;
-  }
-
-  .icon-products {
-    background: #1e3a8a;
-    color: #60a5fa;
-  }
-
-  .icon-orders {
-    background: #7c2d12;
-    color: #fb923c;
-  }
-
-  .icon-users {
-    background: #581c87;
-    color: #c084fc;
   }
 
   .stat-info h3 {
     color: #f1f5f9;
-  }
-
-  .stat-info p {
-    color: #94a3b8;
-  }
-
-  .admin-table {
-    background: #1e293b;
-    border-color: #334155;
   }
 
   .admin-table th {

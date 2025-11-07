@@ -8,11 +8,11 @@ import categoryRoutes from "./routes/categories.js";
 import orderRoutes from "./routes/orders.js";
 import cartRoutes from "./routes/cart.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import path from "path"; 
-import { fileURLToPath } from "url"; 
+import path from "path";
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url); 
-const __dirname = path.dirname(__filename); 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -31,14 +31,12 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/cart", cartRoutes);
 
-//đường dẫn file /server/uploads/image.png -> http://localhost:5000/uploads/image.png
-
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
-// Middleware xử lý lỗi
 app.use((err, req, res, next) => {
-  console.error("❌ Lỗi:", err);
-  res.status(500).json({ message: "Server error" });
+  console.error("❌ Lỗi:", err);
+  res.status(500).json({ message: "Server error" });
 });
 
 const PORT = process.env.PORT || 5000;

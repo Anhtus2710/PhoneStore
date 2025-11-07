@@ -1,124 +1,158 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; 
-import { getAdminProducts, deleteProduct } from "../../api/adminApi"; 
-import "./admin.css"; // Đảm bảo import CSS
+import { useNavigate } from "react-router-dom";
+import { getAdminProducts, deleteProduct } from "../../api/adminApi";
+import api from "../../api/axios"; // Dùng axios instance chung
 
-// Component Quản lý Sản phẩm
+
 export default function QuanLySanPham() {
-  const dieuHuong = useNavigate(); 
-  const [danhSachSanPham, datDanhSachSanPham] = useState([]); 
-  const [dangTai, datDangTai] = useState(true); 
-  const [loi, datLoi] = useState(null); 
+  const dieuHuong = useNavigate();
+  const [danhSachSanPham, datDanhSachSanPham] = useState([]);
+  const [dangTai, datDangTai] = useState(true);
+  const [loi, datLoi] = useState(null);
 
-  // Hàm tải danh sách sản phẩm (giữ nguyên)
+  // 🟢 Hàm tải danh sách sản phẩm
   const taiDanhSachSanPham = async () => {
-    // ... (code giữ nguyên)
-    datDangTai(true); 
-    datLoi(null); 
+    datDangTai(true);
+    datLoi(null);
     try {
-      const phanHoi = await getAdminProducts(); 
-      datDanhSachSanPham(phanHoi.data); 
+      const phanHoi = await getAdminProducts();
+      datDanhSachSanPham(phanHoi.data);
     } catch (err) {
-      console.error("Lỗi khi tải danh sách sản phẩm:", err); 
-      datLoi("Không thể tải danh sách sản phẩm."); 
+      console.error("Lỗi khi tải danh sách sản phẩm:", err);
+      datLoi("Không thể tải danh sách sản phẩm.");
     } finally {
-      datDangTai(false); 
+      datDangTai(false);
     }
   };
 
-  // Tải danh sách khi component mount (giữ nguyên)
   useEffect(() => {
     taiDanhSachSanPham();
-  }, []); 
+  }, []);
 
-  // Hàm xóa sản phẩm (giữ nguyên)
+  // 🟠 Hàm xóa sản phẩm
   const xuLyXoaSanPham = async (idSanPham) => {
-    // ... (code giữ nguyên)
-     if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm này không?`)) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
       try {
-        await deleteProduct(idSanPham); 
-        alert("Xóa sản phẩm thành công!"); 
-        taiDanhSachSanPham(); 
+        await deleteProduct(idSanPham);
+        alert("✅ Xóa sản phẩm thành công!");
+        taiDanhSachSanPham();
       } catch (err) {
-        alert("Lỗi khi xóa sản phẩm: " + (err.response?.data?.message || err.message));
+        alert("❌ Lỗi khi xóa sản phẩm: " + (err.response?.data?.message || err.message));
       }
     }
   };
 
-  // Hàm sửa sản phẩm (giữ nguyên)
+  // 🟡 Hàm sửa sản phẩm
   const xuLySuaSanPham = (idSanPham) => {
     dieuHuong(`/admin/products/edit/${idSanPham}`);
   };
 
-  // --- Render Giao diện ---
-  if (dangTai) {
-    return <p>⏳ Đang tải danh sách sản phẩm...</p>;
-  }
-  if (loi) {
-    return <p>⚠️ {loi}</p>;
-  }
+  // 🟢 Hàm cập nhật trạng thái nổi bật
+  const xuLyToggleNoiBat = async (idSanPham, hienTai) => {
+    try {
+      await api.put(`/products/${idSanPham}/featured`, { featured: !hienTai });
+      taiDanhSachSanPham();
+    } catch (err) {
+      console.error("Lỗi cập nhật nổi bật:", err);
+      alert("❌ Không thể cập nhật trạng thái nổi bật!");
+    }
+  };
+
+  // 🧭 Trạng thái tải dữ liệu
+  if (dangTai) return <p>⏳ Đang tải danh sách sản phẩm...</p>;
+  if (loi) return <p>⚠️ {loi}</p>;
 
   return (
-    <>
-      <h1>📦 Quản lý sản phẩm</h1>
-      <button className="btn-add" onClick={() => dieuHuong("/admin/products/add")}>
-        + Thêm sản phẩm mới
-      </button>
+    <div className="admin-container">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800"></h1>
+        <button
+          className="btn-add bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          onClick={() => dieuHuong("/admin/products/add")}
+        >
+          + Thêm sản phẩm mới
+        </button>
+      </div>
 
-      {/* Bảng hiển thị danh sách sản phẩm */}
-      <table className="admin-table">
-        <thead>
-          <tr>
-            {/* 1. THÊM CỘT HÌNH ẢNH */}
-            <th>Hình ảnh</th> 
-            <th>Tên sản phẩm</th>
-            <th>Giá</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {danhSachSanPham.length === 0 ? (
+      {/* Bảng sản phẩm */}
+      <div className="overflow-x-auto shadow rounded-lg border border-gray-200">
+        <table className="min-w-full text-sm text-left text-gray-700">
+          <thead className="bg-gray-100 text-gray-900 font-medium">
             <tr>
-              {/* 2. CẬP NHẬT COLSPAN */}
-              <td colSpan="4" style={{ textAlign: 'center' }}>Chưa có sản phẩm nào.</td> 
+              <th className="px-4 py-3">Hình ảnh</th>
+              <th className="px-4 py-3">Tên sản phẩm</th>
+              <th className="px-4 py-3">Giá</th>
+              <th className="px-4 py-3 text-center">Nổi bật</th>
+              <th className="px-4 py-3 text-center">Hành động</th>
             </tr>
-          ) : (
-            danhSachSanPham.map((sanPham) => (
-              <tr key={sanPham._id}>
-                {/* 3. THÊM Ô HIỂN THỊ ẢNH */}
-                <td>
-                  {sanPham.image ? (
-                    <img 
-                      // Nhớ thêm địa chỉ backend
-                      src={`http://localhost:5000${sanPham.image}`} 
-                      alt={sanPham.name} 
-                      className="admin-product-image" // Thêm class để CSS
-                    />
-                  ) : (
-                    <span className="no-image">N/A</span> // Hoặc hiển thị gì đó nếu không có ảnh
-                  )}
-                </td>
-                <td>{sanPham.name}</td>
-                <td>{(sanPham.price || 0).toLocaleString()} đ</td>
-                <td className="actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => xuLySuaSanPham(sanPham._id)} 
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => xuLyXoaSanPham(sanPham._id)} 
-                  >
-                    Xóa
-                  </button>
+          </thead>
+          <tbody>
+            {danhSachSanPham.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="text-center py-6 text-gray-500">
+                  Chưa có sản phẩm nào.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </>
+            ) : (
+              danhSachSanPham.map((sp) => (
+                <tr
+                  key={sp._id}
+                  className="border-t border-gray-200 hover:bg-gray-50 transition"
+                >
+                  {/* Hình ảnh */}
+                  <td className="px-4 py-3">
+                    {sp.image ? (
+                      <img
+                        src={`http://localhost:5000${sp.image}`}
+                        alt={sp.name}
+                        className="w-16 h-16 object-cover rounded-md border"
+                      />
+                    ) : (
+                      <span className="text-gray-400">N/A</span>
+                    )}
+                  </td>
+
+                  {/* Tên sản phẩm */}
+                  <td className="px-4 py-3 font-medium text-gray-800">
+                    {sp.name}
+                  </td>
+
+                  {/* Giá */}
+                  <td className="px-4 py-3 text-indigo-600 font-semibold">
+                    {(sp.price || 0).toLocaleString()} đ
+                  </td>
+
+                  {/* Checkbox nổi bật */}
+                  <td className="px-4 py-3 text-center">
+                    <input
+                      type="checkbox"
+                      checked={!!sp.featured}
+                      onChange={() => xuLyToggleNoiBat(sp._id, sp.featured)}
+                      className="w-5 h-5 accent-indigo-600 cursor-pointer"
+                    />
+                  </td>
+
+                  {/* Hành động */}
+                  <td className="px-4 py-3 text-center space-x-2">
+                    <button
+                      onClick={() => xuLySuaSanPham(sp._id)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded transition"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => xuLyXoaSanPham(sp._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

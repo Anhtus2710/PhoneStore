@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Link to view details
-import { getMyOrders, cancelMyOrder } from "../../api/orderApi"; // Import API functions
-import "./myOrders.css"; // Assuming you renamed the CSS file too
+// src/features/my-orders/MyOrders.jsx
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom"; // Link để xem chi tiết
+import { getMyOrders, cancelMyOrder } from "../../api/orderApi"; // Import API
+import "./myOrders.css"; // Import CSS riêng cho trang MyOrders
 
-// Renamed component to MyOrders
 export default function MyOrders() {
   const [orders, setOrders] = useState([]); // State for the list of orders
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for errors
   const [cancellingOrderId, setCancellingOrderId] = useState(null); // State to track which order is being cancelled
 
-  // Function to load orders from the API
-  const loadOrders = async () => {
+  // Function to load orders from the API, wrapped in useCallback
+  const loadOrders = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await getMyOrders(); // Call API
       setOrders(response.data); // Update state
     } catch (err) {
-      console.error("Error loading orders:", err);
-      setError("Không thể tải lịch sử đơn hàng của bạn."); // Keep UI text Vietnamese
+      console.error("Lỗi tải đơn hàng:", err);
+      setError("Không thể tải lịch sử đơn hàng của bạn.");
     } finally {
       setLoading(false); // Finish loading
     }
-  };
+  }, []); // No dependencies, function is created once
 
   // Load orders when the component mounts
   useEffect(() => {
     loadOrders();
-  }, []); // Empty array -> run once
+  }, [loadOrders]); // Run when loadOrders function (from useCallback) is available
 
   // Function to handle order cancellation
   const handleCancelOrder = async (orderId) => {
@@ -38,13 +38,12 @@ export default function MyOrders() {
       setError(null); // Clear previous errors
       try {
         await cancelMyOrder(orderId); // Call cancel API
-        alert("Hủy đơn hàng thành công!"); // Keep UI text Vietnamese
+        alert("Hủy đơn hàng thành công!");
         loadOrders(); // Reload the order list to reflect changes
       } catch (err) {
-        console.error("Error cancelling order:", err);
-        // Show specific error from server if available
-        alert("Lỗi khi hủy đơn hàng: " + (err.response?.data?.message || err.message)); // Keep UI text Vietnamese
-        setError("Đã xảy ra lỗi khi cố gắng hủy đơn hàng."); // Keep UI text Vietnamese
+        console.error("Lỗi hủy đơn hàng:", err);
+        alert("Lỗi khi hủy đơn hàng: " + (err.response?.data?.message || err.message));
+        setError("Đã xảy ra lỗi khi cố gắng hủy đơn hàng.");
       } finally {
         setCancellingOrderId(null); // Finished processing, clear the mark
       }
@@ -53,7 +52,7 @@ export default function MyOrders() {
 
   // Display loading indicator
   if (loading) {
-    return <p className="container">⏳ Đang tải lịch sử đơn hàng...</p>; // Keep UI text Vietnamese
+    return <p className="container">⏳ Đang tải lịch sử đơn hàng...</p>;
   }
 
   // Display error if loading failed and there are no orders
@@ -63,17 +62,16 @@ export default function MyOrders() {
 
   return (
     <div className="container my-orders-page">
-      <h1>Lịch sử đơn hàng</h1> {/* Keep UI text Vietnamese */}
+      <h1>Lịch sử đơn hàng</h1>
       {/* Display cancellation errors if any */}
       {error && <p className="error-message">⚠️ {error}</p>}
 
       {orders.length === 0 ? (
-        <p>Bạn chưa có đơn hàng nào.</p> // Keep UI text Vietnamese
+        <p>Bạn chưa có đơn hàng nào.</p>
       ) : (
         <table className="orders-table">
           <thead>
             <tr>
-              {/* Keep UI text Vietnamese */}
               <th>Mã Đơn Hàng</th>
               <th>Ngày Đặt</th>
               <th>Tổng Tiền</th>
@@ -82,7 +80,7 @@ export default function MyOrders() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => ( // Use 'order' instead of 'dh'
+            {orders.map((order) => (
               <tr key={order._id}>
                 <td>
                   {/* Link to order details (needs page /order/:id) */}
@@ -92,27 +90,25 @@ export default function MyOrders() {
                 <td>{(order.total || 0).toLocaleString()} đ</td>
                 {/* Display status */}
                 <td className={`status status-${order.status || 'pending'}`}>
-                   {/* Keep UI text Vietnamese */}
                   {order.status === 'paid' ? 'Đã thanh toán' :
-                   order.status === 'shipped' ? 'Đã giao hàng' :
-                   order.status === 'cancelled' ? 'Đã hủy' :
-                   'Chờ xử lý'}
+                    order.status === 'shipped' ? 'Đã giao hàng' :
+                      order.status === 'cancelled' ? 'Đã hủy' :
+                        'Chờ xử lý'}
                 </td>
                 <td>
                   {/* Show Cancel button only if status is 'pending' */}
                   {(order.status === 'pending') && (
                     <button
                       className="btn-cancel-order"
-                      onClick={() => handleCancelOrder(order._id)} // Call English function name
-                      disabled={cancellingOrderId === order._id} // Disable while processing this order
+                      onClick={() => handleCancelOrder(order._id)}
+                      disabled={cancellingOrderId === order._id} // Disable while processing
                     >
-                      {/* Change button text while processing */}
-                      {cancellingOrderId === order._id ? 'Đang hủy...' : 'Hủy đơn'} {/* Keep UI text Vietnamese */}
+                      {cancellingOrderId === order._id ? 'Đang hủy...' : 'Hủy đơn'}
                     </button>
                   )}
-                  {/* Optionally show "View Details" link for other statuses */}
+                  {/* Show "View Details" link for other statuses */}
                   {order.status !== 'pending' && (
-                     <Link to={`/order/${order._id}`} className="btn-view-details">Xem chi tiết</Link> // Keep UI text Vietnamese
+                    <Link to={`/order/${order._id}`} className="btn-view-details">Xem chi tiết</Link>
                   )}
                 </td>
               </tr>

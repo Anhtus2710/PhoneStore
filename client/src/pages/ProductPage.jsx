@@ -1,11 +1,6 @@
 import React from 'react';
-import MainLayout from '../layouts/MainLayout';
-import ProductFeature from '../features/product/Product';
+import ProductFeature from '../features/product/Product'; // Import feature Product
 
 export default function ProductPage() {
-  return (
-    <MainLayout>
-      <ProductFeature />
-    </MainLayout>
-  );
+  return <ProductFeature />;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../../store/CartContext";
-import "./cart.css";
+import "./Cart.css";
 
 export default function CartFeature() {
   const navigate = useNavigate();

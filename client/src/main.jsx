@@ -1,10 +1,14 @@
+// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import "./styles/global.css";
 
-// 1. Import các Provider
+import "./index.css"; 
+
+// Import App
+import App from "./App";
+
+// Import các Context Provider
 import { AuthProvider } from "./store/AuthContext";
 import { CartProvider } from "./store/CartContext";
 

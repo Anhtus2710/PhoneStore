@@ -19,13 +19,17 @@
 
 /* Animated Background */
 .auth-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 50px 50px;
   animation: moveGrid 20s linear infinite;
   opacity: 0.3;
@@ -42,11 +46,15 @@
 
 /* Floating Shapes */
 .auth-container::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 300px;
   height: 300px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   border-radius: 50%;
   top: -100px;
   right: -100px;
@@ -54,7 +62,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
   50% {
@@ -70,8 +79,7 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 25px;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.3),
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   position: relative;
   z-index: 1;
@@ -92,7 +100,7 @@
 
 /* Decorative Corner */
 .auth-form::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50px;
   right: -50px;
@@ -104,7 +112,7 @@
 }
 
 .auth-form::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -30px;
   left: -30px;
@@ -141,7 +149,7 @@
 }
 
 .auth-form h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -158,10 +166,18 @@
   animation: fadeIn 0.6s ease-out backwards;
 }
 
-.auth-form .form-group:nth-child(2) { animation-delay: 0.3s; }
-.auth-form .form-group:nth-child(3) { animation-delay: 0.4s; }
-.auth-form .form-group:nth-child(4) { animation-delay: 0.5s; }
-.auth-form .form-group:nth-child(5) { animation-delay: 0.6s; }
+.auth-form .form-group:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.auth-form .form-group:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.auth-form .form-group:nth-child(4) {
+  animation-delay: 0.5s;
+}
+.auth-form .form-group:nth-child(5) {
+  animation-delay: 0.6s;
+}
 
 @keyframes fadeIn {
   from {
@@ -178,7 +194,7 @@
 .auth-form label {
   display: block;
   font-weight: 700;
-  color: #000000; 
+  color: #000000;
   font-size: 0.9rem;
   letter-spacing: 0.3px;
   position: relative;
@@ -186,7 +202,7 @@
 }
 
 .auth-form label::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -212,8 +228,7 @@
 .auth-form input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 
-    0 0 0 4px rgba(102, 126, 234, 0.1),
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1),
     0 4px 12px rgba(102, 126, 234, 0.2);
   transform: translateY(-2px);
 }
@@ -234,8 +249,7 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 
-    0 10px 25px rgba(102, 126, 234, 0.4),
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4),
     0 0 0 0 rgba(102, 126, 234, 0.5);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
@@ -248,7 +262,7 @@
 
 /* Button Ripple Effect */
 .btn-auth::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -267,15 +281,13 @@
 
 .btn-auth:hover {
   transform: translateY(-3px);
-  box-shadow: 
-    0 15px 35px rgba(102, 126, 234, 0.5),
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5),
     0 0 0 6px rgba(102, 126, 234, 0.1);
 }
 
 .btn-auth:active {
   transform: translateY(-1px);
-  box-shadow: 
-    0 8px 20px rgba(102, 126, 234, 0.4),
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4),
     0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -294,7 +306,7 @@
 
 /* Loading Spinner */
 .btn-auth:disabled::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 1.5rem;
   top: 50%;
@@ -316,7 +328,11 @@
 /* Error Message */
 .auth-error {
   color: #ef4444;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(220, 38, 38, 0.1) 100%
+  );
   padding: 1rem;
   border-radius: 12px;
   border-left: 4px solid #ef4444;
@@ -330,13 +346,20 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
 }
 
 .auth-error::before {
-  content: '⚠️';
+  content: "⚠️";
   margin-right: 0.5rem;
   font-size: 1.2rem;
 }
@@ -362,7 +385,7 @@
 }
 
 .auth-switch a::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -466,7 +489,8 @@
 
 /* Success Animation (có thể dùng khi đăng ký thành công) */
 @keyframes successPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
   }

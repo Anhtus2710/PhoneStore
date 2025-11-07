@@ -1,153 +1,320 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 import { getCategories } from "../../api/categoryApi";
-// Import CSS của form
-import "./productAdd.css"; 
 
-// Component Form chung cho Thêm và Sửa
-export default function ProductForm({ onSubmit, initialData = null, isEditing = false, loading = false }) {
-  const navigate = useNavigate(); // Sử dụng navigate thay vì dieuHuong cho nhất quán
-  const [categories, setCategories] = useState([]); // Danh sách danh mục
-  const [error, setError] = useState(null); // Lỗi từ API danh mục
+function isBlank(v) {
+  return v === undefined || v === null || v === "" || v === "undefined" || v === "null";
+}
+function toNumberOrUndef(v) {
+  if (isBlank(v)) return undefined;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
 
-  // State cho các trường text (dùng initialData nếu có)
-  const [formData, setFormData] = useState({
-    name: initialData?.name || "",
-    slug: initialData?.slug || "",
-    description: initialData?.description || "",
-    price: initialData?.price || 0,
-    category: initialData?.category || "", // Nên là ID category
-  });
+export default function ProductForm({
+  mode = "add",                 // "add" | "edit"
+  initialData = {},             // product object khi edit
+  onSubmit,                     // (formData) => Promise|void
+  onCancel,                     // optional: () => void
+  submitting = false,
+}) {
+  // form state
+  const [name, setName] = useState(initialData.name || "");
+  const [description, setDescription] = useState(initialData.description || "");
+  const [category, setCategory] = useState(
+    initialData.category?._id || initialData.category || ""
+  );
+  const [price, setPrice] = useState(
+    initialData.price !== undefined ? String(initialData.price) : ""
+  );
+  const [offerPrice, setOfferPrice] = useState(
+    initialData.offerPrice !== undefined ? String(initialData.offerPrice) : ""
+  );
+  const [featured, setFeatured] = useState(!!initialData.featured);
+  const [inStock, setInStock] = useState(
+    initialData.inStock === undefined ? true : !!initialData.inStock
+  );
 
-  // State cho file ảnh mới
+  // image
   const [imageFile, setImageFile] = useState(null);
-  // State cho URL ảnh (để xem trước)
-  const [imageUrl, setImageUrl] = useState(initialData?.image || "");
+  const [preview, setPreview] = useState(initialData.image || null);
 
-  // Tải danh sách danh mục
+  // categories
+  const [categories, setCategories] = useState([]);
+  const [catLoading, setCatLoading] = useState(true);
+
+  // validation state
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
-    const loadCategories = async () => {
+    (async () => {
       try {
-        const res = await getCategories();
-        setCategories(res.data);
-        // Nếu đang thêm mới và chưa có danh mục, chọn mặc định
-        if (!isEditing && !formData.category && res.data.length > 0) {
-          setFormData((prev) => ({ ...prev, category: res.data[0]._id }));
-        }
-        // Nếu đang sửa và initialData chưa có ID category (chỉ có object), tìm ID
-        else if (isEditing && initialData?.category?._id && !formData.category) {
-            setFormData((prev) => ({ ...prev, category: initialData.category._id }));
-        }
-      } catch (err) {
-        console.error("Lỗi tải danh mục:", err);
-        setError("Không thể tải danh sách danh mục.");
+        const { data } = await getCategories();
+        setCategories(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error("Failed to load categories:", e);
+      } finally {
+        setCatLoading(false);
       }
-    };
-    loadCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEditing, initialData]); // Chạy lại nếu initialData thay đổi (khi sửa)
+    })();
+  }, []);
 
-  // Xử lý thay đổi input text/select
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  // derived: is valid
+  const isValid = useMemo(() => {
+    const next = {};
+    if (!name.trim()) next.name = "Name is required.";
+    if (!category) next.category = "Category is required.";
+    const p = toNumberOrUndef(price);
+    if (p === undefined || p < 0) next.price = "Price must be a non-negative number.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }, [name, category, price]);
+
+  const onPickImage = (file) => {
+    setImageFile(file || null);
+    if (!file) {
+      setPreview(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => setPreview(ev.target.result);
+    reader.readAsDataURL(file);
   };
 
-  // Xử lý thay đổi file ảnh
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file); // Lưu file
-      setImageUrl(URL.createObjectURL(file)); // Tạo URL xem trước
-    } else {
-      // Nếu người dùng hủy chọn file, quay lại ảnh ban đầu (nếu có)
-      setImageFile(null);
-      setImageUrl(initialData?.image || "");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // run validation
+    const _ = isValid; // triggers setErrors through useMemo
+    if (!_) return;
+
+    const fd = new FormData();
+
+    // required / basic
+    fd.append("name", name.trim());
+    fd.append("category", category);
+
+    // optional strings
+    if (!isBlank(description)) fd.append("description", description.trim());
+
+    // numbers
+    const p = toNumberOrUndef(price);
+    if (p !== undefined) fd.append("price", String(p));
+    const op = toNumberOrUndef(offerPrice);
+    if (op !== undefined) fd.append("offerPrice", String(op));
+
+    // booleans
+    fd.append("featured", featured ? "true" : "false");
+    fd.append("inStock", inStock ? "true" : "false");
+
+    // image: chỉ gửi khi user chọn ảnh mới
+    if (imageFile) fd.append("image", imageFile);
+
+    try {
+      await onSubmit?.(fd);
+    } catch (err) {
+      // để parent xử lý, nhưng có thể thông báo ở đây nếu muốn
+      console.error(err);
     }
   };
 
-  // Xử lý khi submit form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Gọi hàm onSubmit được truyền từ cha, gửi dữ liệu form và file ảnh
-    onSubmit(formData, imageFile); 
-  };
-
   return (
-    <>
-      {/* Tiêu đề thay đổi tùy theo trạng thái */}
-      <h1>{isEditing ? "✏️ Chỉnh sửa sản phẩm" : "➕ Thêm sản phẩm mới"}</h1>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-lg bg-white p-6 md:p-10 rounded-lg shadow-sm"
+    >
+      <h2 className="text-xl font-semibold text-gray-800">
+        {mode === "add" ? "Add New Product" : "Edit Product"}
+      </h2>
 
-      {/* Hiển thị ảnh xem trước */}
-      {imageUrl && (
-         <div style={{ marginBottom: '1rem' }}>
-             <p>Ảnh xem trước:</p>
-             <img
-                src={imageUrl.startsWith('blob:') ? imageUrl : `http://localhost:5000${imageUrl}`}
-                alt="Ảnh sản phẩm"
-                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }}
-             />
-         </div>
-      )}
+      {/* Image */}
+      <div>
+        <label className="block text-base font-medium mb-2 text-gray-700">
+          Product Image
+        </label>
+        <div className="flex items-center gap-4 flex-wrap">
+          <label className="cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => onPickImage(e.target.files?.[0] || null)}
+            />
+            {preview ? (
+              <img
+                src={preview}
+                alt="preview"
+                className="w-24 h-24 rounded border object-cover"
+              />
+            ) : (
+              <img
+                src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/uploadArea.png"
+                alt="upload"
+                className="w-24 h-24"
+              />
+            )}
+          </label>
+          {preview && (
+            <button
+              type="button"
+              onClick={() => onPickImage(null)}
+              className="px-3 py-1.5 rounded border border-slate-300 text-sm hover:bg-slate-50"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-slate-500 mt-1">
+          * If you don’t select a new image, the current one will be kept.
+        </p>
+      </div>
 
-      {/* Form */}
-      <form className="admin-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Tên sản phẩm</label>
-          <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="slug">Slug (URL)</label>
-          <input type="text" id="slug" name="slug" value={formData.slug} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="price">Giá</label>
-          <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} required min="0"/>
-        </div>
-        <div className="form-group">
-          <label htmlFor="category">Danh mục</label>
-          <select id="category" name="category" value={formData.category} onChange={handleChange} required>
-            <option value="" disabled>-- Chọn danh mục --</option>
-            {categories.length === 0 && !error && <option disabled>Đang tải...</option>}
-            {error && <option disabled>Lỗi tải danh mục</option>}
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>{cat.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          {/* Label thay đổi tùy trạng thái */}
-          <label htmlFor="image">
-            {isEditing ? "Thay đổi hình ảnh (Để trống nếu không đổi)" : "Hình ảnh sản phẩm"}
+      {/* Name */}
+      <div className="flex flex-col gap-1">
+        <label className="text-base font-medium" htmlFor="product-name">
+          Product Name
+        </label>
+        <input
+          id="product-name"
+          type="text"
+          placeholder="Enter product name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className={`outline-none border rounded px-3 py-2.5 focus:ring-2 ${
+            errors.name ? "border-red-300 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
+          }`}
+          required
+        />
+        {errors.name && (
+          <span className="text-xs text-red-600">{errors.name}</span>
+        )}
+      </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="text-base font-medium" htmlFor="product-description">
+          Description
+        </label>
+        <textarea
+          id="product-description"
+          rows={4}
+          placeholder="Enter product description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="outline-none border border-gray-300 rounded px-3 py-2.5 resize-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      {/* Category */}
+      <div className="flex flex-col gap-1">
+        <label className="text-base font-medium" htmlFor="category">
+          Category
+        </label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className={`outline-none border rounded px-3 py-2.5 focus:ring-2 ${
+            errors.category ? "border-red-300 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
+          }`}
+          required
+          disabled={catLoading}
+        >
+          <option value="">{catLoading ? "Loading..." : "Select category"}</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        {errors.category && (
+          <span className="text-xs text-red-600">{errors.category}</span>
+        )}
+      </div>
+
+      {/* Prices */}
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex-1 flex flex-col gap-1">
+          <label className="text-base font-medium" htmlFor="price">
+            Price
           </label>
           <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/png, image/jpeg, image/gif"
-            onChange={handleFileChange}
-            // Không bắt buộc phải chọn file khi sửa
-            required={!isEditing} 
+            id="price"
+            type="number"
+            placeholder="0"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className={`outline-none border rounded px-3 py-2.5 focus:ring-2 ${
+              errors.price ? "border-red-300 focus:ring-red-400" : "border-gray-300 focus:ring-indigo-500"
+            }`}
+            min={0}
+            required
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Mô tả</label>
-          <textarea id="description" name="description" rows="5" value={formData.description} onChange={handleChange}></textarea>
+          {errors.price && (
+            <span className="text-xs text-red-600">{errors.price}</span>
+          )}
         </div>
 
-        {/* Thông báo lỗi từ component cha sẽ hiển thị ở đây */}
-        {/* {error && <p className="error-message">{error}</p>} */}
-
-        {/* Nút bấm */}
-        <div className="form-actions">
-          <button type="submit" className="btn-submit" disabled={loading}>
-            {loading ? "Đang xử lý..." : (isEditing ? "Lưu thay đổi" : "Thêm sản phẩm")}
-          </button>
-          <button type="button" className="btn-cancel" onClick={() => navigate("/admin/products")}>
-            Hủy
-          </button>
+        <div className="flex-1 flex flex-col gap-1">
+          <label className="text-base font-medium" htmlFor="offerPrice">
+            Offer Price
+          </label>
+          <input
+            id="offerPrice"
+            type="number"
+            placeholder="0"
+            value={offerPrice}
+            onChange={(e) => setOfferPrice(e.target.value)}
+            className="outline-none border border-gray-300 rounded px-3 py-2.5 focus:ring-2 focus:ring-indigo-500"
+            min={0}
+          />
+          <span className="text-xs text-slate-500">
+            Leave blank if not discounted.
+          </span>
         </div>
-      </form>
-    </>
+      </div>
+
+      {/* Switches */}
+      <div className="flex flex-col gap-3 mt-3">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            className="w-5 h-5 accent-indigo-600"
+            checked={featured}
+            onChange={(e) => setFeatured(e.target.checked)}
+          />
+          <span className="text-sm text-gray-700">Mark as Featured</span>
+        </label>
+
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            className="w-5 h-5 accent-indigo-600"
+            checked={inStock}
+            onChange={(e) => setInStock(e.target.checked)}
+          />
+          <span className="text-sm text-gray-700">In Stock</span>
+        </label>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-3 pt-2">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-6 py-2.5 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-700 disabled:opacity-60"
+        >
+          {submitting ? "Saving..." : mode === "add" ? "Add Product" : "Save Changes"}
+        </button>
+
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-2.5 border border-slate-300 rounded font-medium hover:bg-slate-50"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
+    </form>
   );
 }
