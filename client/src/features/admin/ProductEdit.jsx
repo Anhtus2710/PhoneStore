@@ -37,25 +37,13 @@ export default function SuaSanPham() {
   }, [sanPhamId]);
 
   // Hàm xử lý khi Form chung được submit
-  const handleUpdateSubmit = async (formData, imageFile) => {
+ const handleUpdateSubmit = async (formData) => { // 1. Chỉ nhận 1 tham số (là FormData)
     setLoading(true);
     setError(null);
-
-    // Tạo FormData
-    const productData = new FormData();
-    productData.append("name", formData.name);
-    productData.append("slug", formData.slug);
-    productData.append("description", formData.description);
-    productData.append("price", formData.price);
-    productData.append("category", formData.category);
-
-    // Chỉ thêm ảnh nếu có file mới được chọn
-    if (imageFile) {
-      productData.append("image", imageFile);
-    }
-
     try {
-      await updateProduct(sanPhamId, productData);
+      // 3. Gửi thẳng 'formData' nhận được từ ProductForm
+      await updateProduct(sanPhamId, formData); 
+      
       alert("Cập nhật sản phẩm thành công!");
       navigate("/admin/products");
     } catch (err) {

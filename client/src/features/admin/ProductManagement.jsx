@@ -50,7 +50,7 @@ export default function QuanLySanPham() {
   // 🟢 Hàm cập nhật trạng thái nổi bật
   const xuLyToggleNoiBat = async (idSanPham, hienTai) => {
     try {
-      await api.put(`/products/${idSanPham}/featured`, { featured: !hienTai });
+     await api.patch(`/products/${idSanPham}/featured`, { featured: !hienTai });
       taiDanhSachSanPham();
     } catch (err) {
       console.error("Lỗi cập nhật nổi bật:", err);

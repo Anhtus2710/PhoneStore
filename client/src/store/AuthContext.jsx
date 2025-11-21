@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios.js";
 
 // 1. Tạo Context
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 // 2. Tạo Provider
 export function AuthProvider({ children }) {

@@ -1,28 +1,37 @@
 // src/layouts/AdminLayout.jsx
 import React, { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../store/AuthContext"; // Hook lấy thông tin user & logout
+import { useAuth } from "../hooks/useAuth"; 
 
 export default function AdminLayout() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Kiểm tra quyền truy cập
+  // === 1. SỬA LẠI LOGIC BẢO VỆ ===
   useEffect(() => {
-    if (!user || user.role !== "admin") {
-      logout();
-      navigate("/login");
+    if (!loading) { 
+      if (!user) {
+        // Nếu không có user (chưa đăng nhập)
+        navigate("/login");
+      } else if (user.role !== "admin") {
+        // Nếu là user thường, đá về trang chủ
+        navigate("/home");
+      }
+      // Nếu là admin, không làm gì cả (ở lại)
     }
-  }, [user, logout, navigate]);
+  }, [user, loading, navigate]);
 
-  if (!user)
+  
+  if (loading || !user) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-600">
         ⏳ Đang xác thực quyền quản trị...
       </div>
     );
+  }
 
+  // (Phần JSX còn lại giữ nguyên)
   const sidebarLinks = [
     { name: "Thống kê", path: "/admin/home", icon: "🏠" },
     { name: "Sản phẩm", path: "/admin/products", icon: "📦" },
@@ -60,10 +69,11 @@ export default function AdminLayout() {
             <span className="hidden sm:block font-medium">
               Xin chào, <span className="text-indigo-600">{user.name || "Admin"}</span>
             </span>
+            
+            {/* === 2. SỬA LẠI NÚT ĐĂNG XUẤT === */}
             <button
               onClick={() => {
-                logout();
-                navigate("/login");
+                logout(); // Chỉ cần gọi logout, AuthContext sẽ tự điều hướng về /home
               }}
               className="border border-gray-300 rounded-full px-4 py-1 text-sm hover:bg-gray-100"
             >
@@ -87,6 +97,11 @@ export default function AdminLayout() {
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  onClick={() => {
+                    if (window.innerWidth < 768) {
+                      setSidebarOpen(false);
+                    }
+                  }}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
                       isActive

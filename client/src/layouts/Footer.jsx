@@ -1,69 +1,164 @@
-// src/layouts/Footer.jsx
+// ===== 3. Footer.jsx =====
 import React from "react";
+import { Link } from "react-router-dom";
+import { FaApple, FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
-// src/layouts/Footer.jsx
 export default function Footer() {
   return (
-    // Full-bleed: phá vỡ mọi container cha
-    <footer className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen bg-white border-t border-slate-200">
-      {/* Content: tăng bề rộng tối đa ở đây */}
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 xl:px-20 pt-10 text-sm text-slate-600">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
-          {/* Brand + intro */}
-          <div>
-            <a href="/" className="inline-flex items-center gap-2">
-              <span className="inline-grid place-items-center size-10 rounded-lg bg-indigo-600 text-white font-semibold">
-                P
-              </span>
-              <span className="text-lg font-semibold text-gray-900">PhoneStore</span>
-            </a>
-            <p className="mt-6 leading-7 text-slate-500">
-              PhoneStore cung cấp giao diện hiện đại, dễ tuỳ biến với Tailwind CSS cho website bán hàng.
+    <footer className="bg-gray-50 border-t border-gray-200">
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="inline-flex items-center gap-2 mb-6">
+              <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center">
+                <FaApple className="text-white text-xl" />
+              </div>
+              <span className="text-xl font-semibold text-gray-900">PhoneStore</span>
+            </Link>
+            <p className="text-gray-600 mb-6 max-w-md">
+              Cung cấp các sản phẩm công nghệ chính hãng với chất lượng tốt nhất. 
+              Trải nghiệm mua sắm hiện đại và tiện lợi.
             </p>
-          </div>
-
-          {/* Links */}
-          <div className="md:mx-auto">
-            <nav className="flex flex-col space-y-2.5">
-              <h2 className="mb-5 text-gray-800 font-semibold">Công ty</h2>
-              <a className="transition hover:text-slate-700" href="#">Về chúng tôi</a>
-              <a className="transition hover:text-slate-700" href="#">
-                Tuyển dụng
-                <span className="ml-2 rounded-md bg-indigo-600 px-2 py-1 text-xs text-white">Đang mở!</span>
+            <div className="flex gap-4">
+              <a href="#" className="w-10 h-10 bg-gray-900 hover:bg-gray-800 rounded-full flex items-center justify-center text-white transition-colors">
+                <FaFacebook />
               </a>
-              <a className="transition hover:text-slate-700" href="#">Liên hệ</a>
-              <a className="transition hover:text-slate-700" href="#">Chính sách bảo mật</a>
-            </nav>
+              <a href="#" className="w-10 h-10 bg-gray-900 hover:bg-gray-800 rounded-full flex items-center justify-center text-white transition-colors">
+                <FaTwitter />
+              </a>
+              <a href="#" className="w-10 h-10 bg-gray-900 hover:bg-gray-800 rounded-full flex items-center justify-center text-white transition-colors">
+                <FaInstagram />
+              </a>
+              <a href="#" className="w-10 h-10 bg-gray-900 hover:bg-gray-800 rounded-full flex items-center justify-center text-white transition-colors">
+                <FaYoutube />
+              </a>
+            </div>
           </div>
 
-          {/* Newsletter */}
+          {/* Shop Column */}
           <div>
-            <h2 className="mb-5 text-gray-800 font-semibold">Đăng ký nhận tin</h2>
-            <div className="max-w-md space-y-6">
-              <p>Nhận tin tức, bài viết và tài nguyên mới nhất mỗi tuần.</p>
-              <form
-                className="flex items-center gap-2 rounded-md bg-indigo-50 p-2"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <input
-                  type="email"
-                  placeholder="Nhập email của bạn"
-                  className="w-full rounded px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
-                />
-                <button
-                  type="submit"
-                  className="rounded bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700"
-                >
-                  Đăng ký
-                </button>
-              </form>
-            </div>
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              Mua sắm
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/catalog" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Tất cả sản phẩm
+                </Link>
+              </li>
+              <li>
+                <Link to="/catalog?category=iphone" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  iPhone
+                </Link>
+              </li>
+              <li>
+                <Link to="/catalog?category=ipad" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  iPad
+                </Link>
+              </li>
+              <li>
+                <Link to="/catalog?category=watch" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Apple Watch
+                </Link>
+              </li>
+              <li>
+                <Link to="/catalog?category=accessories" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Phụ kiện
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support Column */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              Hỗ trợ
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Liên hệ
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Chính sách đổi trả
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Chính sách bảo hành
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Hướng dẫn mua hàng
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Câu hỏi thường gặp
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company Column */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              Công ty
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Về chúng tôi
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Tin tức
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Tuyển dụng
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Chính sách bảo mật
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Điều khoản sử dụng
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <p className="mt-8 border-t border-slate-200 py-4 text-center text-slate-500">
-          © {new Date().getFullYear()} PhoneStore. All rights reserved.
-        </p>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-200 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-gray-600">
+              © {new Date().getFullYear()} PhoneStore. All rights reserved.
+            </p>
+            <div className="flex gap-6 text-sm text-gray-600">
+              <a href="#" className="hover:text-gray-900 transition-colors">
+                Chính sách bảo mật
+              </a>
+              <a href="#" className="hover:text-gray-900 transition-colors">
+                Điều khoản
+              </a>
+              <a href="#" className="hover:text-gray-900 transition-colors">
+                Cookie
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );

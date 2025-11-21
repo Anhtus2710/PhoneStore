@@ -2,8 +2,36 @@
 import Product from "../models/product.js";
 import slugify from "slugify";
 
+// Import các module cần thiết để xử lý file
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// --- Cấu hình đường dẫn ---
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const UPLOADS_DIR = path.join(__dirname, "../../uploads/");
+
+// --- Helper: Hàm xóa file ảnh ---
+const deleteImage = (imagePath) => {
+  if (!imagePath) return;
+  const filename = imagePath.split("/uploads/")[1];
+  if (!filename) return;
+  const fullPath = path.join(UPLOADS_DIR, filename);
+
+  fs.unlink(fullPath, (err) => {
+    if (err) console.error(`Lỗi khi xóa file ảnh: ${fullPath}`, err);
+    else console.log(`Đã xóa file ảnh: ${fullPath}`);
+  });
+};
+
+// --- Helper: Tạo slug ---
 const makeSlug = (name) =>
   slugify(name, { lower: true, strict: true, locale: "vi" });
+
+// ==============================================
+//  PUBLIC GETTERS (Công khai)
+// ==============================================
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -16,7 +44,9 @@ export const getProducts = async (req, res, next) => {
       filter.featured = String(featured) === "true";
     }
 
-    const products = await Product.find(filter).populate("category", "name");
+    const products = await Product.find(filter)
+      .populate("category", "name")
+      .sort({ createdAt: -1 }); // Sắp xếp mới nhất
     res.json(products);
   } catch (err) {
     next(err);
@@ -25,110 +55,205 @@ export const getProducts = async (req, res, next) => {
 
 export const getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).populate("category", "name");
-    if (!product) return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
-    res.json(product);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getProductBySlug = async (req, res) => {
-  try {
-    const product = await Product.findOne({ slug: req.params.slug }).populate("category");
+    const product = await Product.findById(req.params.id).populate(
+      "category",
+      "name"
+    );
     if (!product)
-      return res.status(404).json({ message: "Không tìm thấy sản phẩm theo slug" });
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
     res.json(product);
   } catch (err) {
-    console.error("❌ getProductBySlug error:", err);
-    res.status(500).json({ message: "Lỗi server khi lấy sản phẩm theo slug" });
+    next(err);
   }
 };
 
-export const createProduct = async (req, res, next) => {
+export const getProductBySlug = async (req, res, next) => {
   try {
-    const body = { ...req.body };
-    if (body.name) body.slug = makeSlug(body.name);
-
-    // Nếu có upload file qua multer:
-    if (req.file?.path) {
-      body.image = req.file.path.startsWith("/") ? req.file.path : `/${req.file.path}`;
-    }
-
-    const p = await Product.create(body);
-    res.status(201).json(p);
+    const product = await Product.findOne({ slug: req.params.slug }).populate(
+      "category"
+    );
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy sản phẩm theo slug" });
+    res.json(product);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateProduct = async (req, res, next) => {
-  try {
-    const payload = { ...req.body };
-
-    // Ảnh mới (nếu có)
-    if (req.file?.path) {
-      const p = req.file.path.startsWith("/") ? req.file.path : `/${req.file.path}`;
-      payload.image = p;
-    }
-
-    if (Object.keys(payload).length === 0) {
-      return res.status(400).json({ message: "No valid fields to update." });
-    }
-
-    const updated = await Product.findByIdAndUpdate(
-      req.params.id,
-      { $set: payload },
-      {
-        new: true,
-        runValidators: true,
-        omitUndefined: true, // tránh cast "undefined"
-        context: "query",
-      }
-    ).populate("category", "name");
-
-    if (!updated) return res.status(404).json({ message: "Product not found" });
-    res.json(updated);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const deleteProduct = async (req, res, next) => {
-  try {
-    const p = await Product.findByIdAndDelete(req.params.id);
-    if (!p) return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
-    res.json({ message: "Xóa thành công" });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Featured list (max 4, newest first)
+// Lấy sản phẩm nổi bật (cho trang chủ)
 export const getFeaturedProducts = async (req, res, next) => {
   try {
     const limit = Number(req.query.limit) || 4;
     const products = await Product.find({ featured: true })
       .sort({ createdAt: -1 })
-      .limit(limit);
+      .limit(limit)
+      .populate("category", "name");
     res.json(products);
   } catch (err) {
     next(err);
   }
 };
 
-// Toggle featured (dùng cho PATCH /:id/featured)
+// ==============================================
+//  ADMIN CRUD (Quản trị)
+// ==============================================
+
+// Lấy tất cả sản phẩm (cho trang admin)
+export const getAdminProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find({})
+      .populate("category", "name")
+      .sort({ createdAt: -1 });
+    res.json(products);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Tạo sản phẩm
+export const createProduct = async (req, res, next) => {
+  try {
+    const body = { ...req.body };
+    if (body.name) body.slug = makeSlug(body.name);
+
+    // Xử lý ảnh
+    if (!req.file) {
+      return res.status(400).json({ message: "Vui lòng upload một hình ảnh" });
+    }
+    const imagePath = `/uploads/${req.file.filename}`;
+    body.image = imagePath;
+
+    // Kiểm tra slug
+    const exists = await Product.findOne({ slug: body.slug });
+    if (exists) {
+      deleteImage(imagePath); // Xóa ảnh đã tải lên nếu slug trùng
+      return res.status(400).json({ message: "Slug đã tồn tại" });
+    }
+
+    const p = await Product.create(body);
+    res.status(201).json(p);
+  } catch (err) {
+    // Nếu lỗi, xóa ảnh đã tải lên
+    if (req.file) {
+      deleteImage(`/uploads/${req.file.filename}`);
+    }
+    next(err);
+  }
+};
+
+// Cập nhật sản phẩm
+export const updateProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updateData = { ...req.body };
+
+    // 1. Tìm sản phẩm
+    const product = await Product.findById(id);
+    if (!product) {
+      if (req.file) deleteImage(`/uploads/${req.file.filename}`); // Xóa ảnh mới nếu lỡ upload
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+    }
+
+    // 2. Cập nhật slug nếu tên thay đổi
+    if (updateData.name) {
+      updateData.slug = makeSlug(updateData.name);
+    }
+
+    // 3. Xử lý ảnh MỚI (nếu có)
+    if (req.file) {
+      const newImagePath = `/uploads/${req.file.filename}`;
+      // Xóa ảnh CŨ
+      if (product.image) {
+        deleteImage(product.image);
+      }
+      // Thêm ảnh MỚI
+      updateData.image = newImagePath;
+    }
+
+    // 4. Cập nhật vào DB
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { $set: updateData }, // Dùng $set để tránh ghi đè "undefined"
+      {
+        new: true,
+        runValidators: true,
+        omitUndefined: true,
+      }
+    ).populate("category", "name");
+
+    res.json(updatedProduct);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Xóa sản phẩm
+export const deleteProduct = async (req, res, next) => {
+  try {
+    const p = await Product.findById(req.params.id);
+    if (!p) return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+
+    // Xóa ảnh trước
+    if (p.image) {
+      deleteImage(p.image);
+    }
+
+    // Xóa khỏi DB
+    await Product.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Xóa thành công" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Đặt/hủy sản phẩm nổi bật
 export const setProductFeatured = async (req, res, next) => {
   try {
     const { featured } = req.body;
+
+    if (typeof featured !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "Trạng thái 'featured' (boolean) là bắt buộc" });
+    }
+
     const p = await Product.findByIdAndUpdate(
       req.params.id,
-      { featured: !!featured },
+      { featured: featured },
       { new: true }
     );
     if (!p) return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
-    res.json({ message: "Cập nhật sản phẩm nổi bật thành công.", product: p });
+    res.json({ message: "Cập nhật thành công", product: p });
   } catch (err) {
     next(err);
+  }
+};
+export const searchProducts = async (req, res) => {
+  try {
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword, // Tìm kiếm một phần của tên
+            $options: "i", // Không phân biệt chữ hoa chữ thường
+          },
+        }
+      : {}; // Nếu không có keyword, trả về rỗng (có thể trả về tất cả sản phẩm hoặc lỗi)
+
+    const products = await Product.find({ ...keyword }).populate(
+      "category",
+      "name"
+    ); // Lấy thêm tên category
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm nào." });
+    }
+
+    res.json(products);
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+    res.status(500).json({ message: "Lỗi máy chủ khi tìm kiếm sản phẩm." });
   }
 };

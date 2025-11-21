@@ -1,4 +1,6 @@
+// models/User.js
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs"; // Dùng bcryptjs
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,5 +11,20 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// HÀM SO SÁNH MẬT KHẨU (Dùng cho loginUser)
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// HÀM MÃ HÓA (Dùng cho registerUser)
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
 export default mongoose.model("User", userSchema);

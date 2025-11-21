@@ -4,6 +4,5 @@ export const getMyOrders = () => api.get("/orders/myorders");
 export const getOrderDetails = (id) => api.get(`/orders/${id}`);
 
 export const cancelMyOrder = (orderId) => {
-
-  return api.put(`/orders/${orderId}/cancel`); 
+  return api.put(`/orders/${orderId}/cancel`);
 };

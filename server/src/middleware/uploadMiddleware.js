@@ -13,13 +13,12 @@ const storage = multer.diskStorage({
     // Lưu vào thư mục 'uploads' ở ngoài thư mục 'src'
     cb(null, path.join(__dirname, "../../uploads/")); 
   },
-  // Định nghĩa tên file
+
   filename: (req, file, cb) => {
-    // Tạo tên file duy nhất: fieldname-timestamp.extension
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniquePrefix = Date.now();
     cb(
       null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+      uniquePrefix + "-" + file.originalname
     );
   },
 });

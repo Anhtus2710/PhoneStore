@@ -15,6 +15,8 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import MyOrdersPage from "./pages/MyOrdersPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
+import AdminCategoriesPage from "./pages/AdminCategoriesPage";
+import SearchResults from './features/search/SearchResults';
 // Placeholder (Tạo file ProfilePage.jsx nếu cần)
 const ProfilePage = () => <div style={{ padding: '3rem', maxWidth: '1200px', margin: 'auto' }}><h1>Trang thông tin cá nhân (chưa tạo)</h1></div>;
 
@@ -47,6 +49,7 @@ export default function App() {
         <Route path="/my-orders" element={<MyOrdersPage />} />
         <Route path="/order/:id" element={<OrderDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/search" element={<SearchResults />} />
       </Route>
 
       {/* --- TUYẾN ĐƯỜNG ADMIN (Bọc trong AdminLayout) --- */}
@@ -59,6 +62,7 @@ export default function App() {
         <Route path="products/edit/:id" element={<AdminEditProductPage />} />
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="categories" element={<AdminCategoriesPage />} />
       </Route>
 
       {/* --- TUYẾN ĐƯỜNG AUTH (Không có Layout) --- */}

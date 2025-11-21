@@ -1,8 +1,9 @@
-// src/layouts/Navbar.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react"; // <-- Thêm useCallback
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/AuthContext";
 import { useCart } from "../store/CartContext";
+import { FaApple, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
+import api from "../api/axios"; // <-- Import axios instance của bạn
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -11,268 +12,355 @@ export default function Navbar() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const userMenuRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]); // <-- State cho gợi ý tìm kiếm
+  const [showSuggestions, setShowSuggestions] = useState(false); // <-- State ẩn/hiện gợi ý
 
+  const userMenuRef = useRef(null);
+  const searchInputRef = useRef(null); // <-- Ref cho ô tìm kiếm
+
+  // Base URL cho API (từ biến môi trường)
+  const API_BASE_URL = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+
+  // --- Logic đóng User Menu khi click ra ngoài ---
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+    function handleClickOutside(event) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
     }
-    if (isUserMenuOpen)
-      document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isUserMenuOpen]);
+  }, []); // Không phụ thuộc vào isUserMenuOpen nữa, luôn lắng nghe
 
-  const [searchTerm, setSearchTerm] = useState("");
+  // --- Logic đóng Suggestions khi click ra ngoài ---
+  useEffect(() => {
+    function handleClickOutsideSearch(event) {
+      if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutsideSearch);
+    return () => document.removeEventListener("mousedown", handleClickOutsideSearch);
+  }, []);
+
+  // --- Debounce cho API tìm kiếm gợi ý ---
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchTerm.trim().length > 1) { // Chỉ tìm nếu từ khóa đủ dài
+        try {
+          const { data } = await api.get(`/api/products/search?keyword=${searchTerm.trim()}`);
+          setSuggestions(data.slice(0, 5)); // Lấy tối đa 5 gợi ý
+          setShowSuggestions(true);
+        } catch (error) {
+          console.error("Lỗi khi fetch gợi ý:", error);
+          setSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    };
+
+    const handler = setTimeout(() => {
+      fetchSuggestions();
+    }, 300); // Debounce 300ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]); // Chạy lại khi searchTerm thay đổi
+
+  // --- Xử lý tìm kiếm chính (khi nhấn Enter/nút) ---
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
-    navigate(`/catalog?q=${encodeURIComponent(searchTerm)}`);
+    navigate(`/catalog?q=${encodeURIComponent(searchTerm)}`); // Chuyển hướng đến trang catalog với query 'q'
     setSearchTerm("");
-    setIsMobileMenuOpen(false);
+    setSuggestions([]); // Xóa gợi ý
+    setShowSuggestions(false); // Đóng gợi ý
+    setIsMobileMenuOpen(false); // Đóng menu mobile nếu đang mở
   };
 
-  const handleNavLinkClick = () => {
+  // --- Xử lý click vào một gợi ý ---
+  const handleSuggestionClick = (slug) => {
+    navigate(`/products/${slug}`); // Chuyển đến trang chi tiết sản phẩm
+    setSearchTerm("");
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setIsMobileMenuOpen(false); // Đóng menu mobile nếu đang mở
+  };
+
+  const handleNavLinkClick = useCallback(() => { // Sử dụng useCallback
     setIsMobileMenuOpen(false);
     setIsUserMenuOpen(false);
-  };
+    setShowSuggestions(false); // Đóng gợi ý khi click vào nav link khác
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => { // Sử dụng useCallback
     logout();
     handleNavLinkClick();
     navigate("/login");
-  };
+  }, [logout, handleNavLinkClick, navigate]);
 
   return (
-    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
-      {/* Logo */}
-      <Link to="/home" onClick={handleNavLinkClick} aria-label="Home">
-        <div className="flex items-center gap-2">
-          <span className="inline-grid place-items-center size-10 rounded-lg bg-indigo-600 text-white font-semibold">
-            P
-          </span>
-          <span className="text-lg font-semibold text-gray-900">
-            PhoneStore
-          </span>
-        </div>
-      </Link>
-
-      {/* Desktop Menu */}
-      <div className="hidden sm:flex items-center gap-8">
-        <Link
-          to="/"
-          className="hover:text-indigo-500 transition-colors font-medium"
-        >
-          Trang chủ
-        </Link>
-        <Link
-          to="/catalog"
-          className="hover:text-indigo-500 transition-colors font-medium"
-        >
-          Sản phẩm
-        </Link>
-
-        {/* Search */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full"
-        >
-          <input
-            className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
-            type="text"
-            placeholder="Tìm kiếm sản phẩm..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" aria-label="Search">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.836 10.615 15 14.695"
-                stroke="#7A7B7D"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                clipRule="evenodd"
-                d="M9.141 11.738c2.729-1.136 4.001-4.224 2.841-6.898S7.67.921 4.942 2.057C2.211 3.193.94 6.281 2.1 8.955s4.312 3.92 7.041 2.783"
-                stroke="#7A7B7D"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </form>
-
-        {/* Cart */}
-        <Link to="/cart" className="relative cursor-pointer" aria-label="Cart">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 14 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0"
-              stroke="#615fff"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {cartCount > 0 && (
-            <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
-              {cartCount}
-            </span>
-          )}
-        </Link>
-
-        {/* User / Login */}
-        {user ? (
-          <div className="relative" ref={userMenuRef}>
-            <button
-              onClick={() => setIsUserMenuOpen((v) => !v)}
-              className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full"
-            >
-              Chào, {user.name}
-            </button>
-            {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                <Link
-                  to="/my-orders"
-                  onClick={handleNavLinkClick}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Đơn hàng của tôi
-                </Link>
-                <Link
-                  to="/profile"
-                  onClick={handleNavLinkClick}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Hồ sơ cá nhân
-                </Link>
-                {user.role === "admin" && (
-                  <Link
-                    to="/admin"
-                    onClick={handleNavLinkClick}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Quản trị viên
-                  </Link>
-                )}
-                <div className="border-t border-gray-100 my-1" />
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  Đăng xuất
-                </button>
+    <>
+      {/* Main Navbar */}
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" onClick={handleNavLinkClick} className="flex items-center gap-2 group">
+              <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center group-hover:bg-gray-800 transition-colors">
+                <FaApple className="text-white text-xl" />
               </div>
-            )}
-          </div>
-        ) : (
-          <Link
-            to="/login"
-            className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full"
-          >
-            Đăng nhập
-          </Link>
-        )}
-      </div>
+              <span className="text-xl font-semibold text-gray-900 hidden sm:block">
+                PhoneStore
+              </span>
+            </Link>
 
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMobileMenuOpen((v) => !v)}
-        aria-label="Menu"
-        className="sm:hidden"
-      >
-        <svg
-          width="21"
-          height="15"
-          viewBox="0 0 21 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect width="21" height="1.5" rx=".75" fill="#426287" />
-          <rect x="8" y="6" width="13" height="1.5" rx=".75" fill="#426287" />
-          <rect x="6" y="13" width="15" height="1.5" rx=".75" fill="#426287" />
-        </svg>
-      </button>
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              <Link
+                to="/"
+                onClick={handleNavLinkClick}
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Trang chủ
+              </Link>
+              <Link
+                to="/catalog"
+                onClick={handleNavLinkClick}
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Sản phẩm
+              </Link>
+
+              {/* Search với Autocomplete (Desktop) */}
+              <div ref={searchInputRef} className="relative"> {/* <-- Thêm ref */}
+                <form onSubmit={handleSearchSubmit} className="relative">
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)} // Hiện gợi ý khi focus lại
+                    className="w-48 pl-9 pr-4 py-2 text-sm bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  />
+                </form>
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="absolute z-20 w-full bg-white border border-gray-200 rounded-lg mt-2 shadow-lg max-h-60 overflow-y-auto">
+                    {suggestions.map((product) => (
+                      <li
+                        key={product._id}
+                        className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                        onClick={() => handleSuggestionClick(product.slug)}
+                      >
+                        <img
+                          src={`${API_BASE_URL}${product.image}`}
+                          alt={product.name}
+                          className="w-10 h-10 object-cover rounded mr-3"
+                        />
+                        <span className="text-sm text-gray-800 line-clamp-1">{product.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-4">
+              {/* Cart */}
+              <Link
+                to="/cart"
+                onClick={handleNavLinkClick}
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Cart"
+              >
+                <FaShoppingBag className="text-gray-700 text-lg" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs font-semibold rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* User Menu */}
+              {user ? (
+                <div className="relative" ref={userMenuRef}>
+                  <button
+                    onClick={() => setIsUserMenuOpen((v) => !v)}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                  >
+                    <FaUser className="text-sm" />
+                    <span className="text-sm font-medium hidden sm:block">{user.name}</span>
+                  </button>
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 border border-gray-200 z-50">
+                      <Link
+                        to="/my-orders"
+                        onClick={handleNavLinkClick}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Đơn hàng của tôi
+                      </Link>
+                      <Link
+                        to="/profile"
+                        onClick={handleNavLinkClick}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Hồ sơ cá nhân
+                      </Link>
+                      {user.role === "admin" && (
+                        <Link
+                          to="/admin"
+                          onClick={handleNavLinkClick}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          Quản trị viên
+                        </Link>
+                      )}
+                      <div className="border-t border-gray-100 my-2" />
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        Đăng xuất
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={handleNavLinkClick}
+                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Đăng nhập
+                </Link>
+              )}
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen((v) => !v)}
+                className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Menu"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
 
       {/* Mobile Menu */}
-      <div
-        className={`${
-          isMobileMenuOpen ? "flex" : "hidden"
-        } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden z-40`}
-      >
-        <Link
-          to="/"
-          onClick={handleNavLinkClick}
-          className="block w-full py-2 px-3 hover:bg-gray-100 rounded"
-        >
-          Trang chủ
-        </Link>
-        <Link
-          to="/catalog"
-          onClick={handleNavLinkClick}
-          className="block w-full py-2 px-3 hover:bg-gray-100 rounded"
-        >
-          Sản phẩm
-        </Link>
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 top-16 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="relative bg-white border-b border-gray-200 shadow-xl">
+            <div className="max-w-7xl mx-auto px-6 py-4 space-y-4">
+              {/* Mobile Search với Autocomplete */}
+              <div className="relative">
+                <form onSubmit={handleSearchSubmit} className="relative">
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={() => searchTerm.trim().length > 1 && suggestions.length > 0 && setShowSuggestions(true)}
+                    className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </form>
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="absolute z-20 w-full bg-white border border-gray-200 rounded-lg mt-2 shadow-lg max-h-60 overflow-y-auto">
+                    {suggestions.map((product) => (
+                      <li
+                        key={product._id}
+                        className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                        onClick={() => handleSuggestionClick(product.slug)}
+                      >
+                        <img
+                          src={`${API_BASE_URL}${product.image}`}
+                          alt={product.name}
+                          className="w-10 h-10 object-cover rounded mr-3"
+                        />
+                        <span className="text-sm text-gray-800 line-clamp-1">{product.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
-        <div className="border-t border-gray-200 w-full my-2"></div>
 
-        {user ? (
-          <>
-            <Link
-              to="/my-orders"
-              onClick={handleNavLinkClick}
-              className="block w-full py-2 px-3 hover:bg-gray-100 rounded"
-            >
-              Đơn hàng của tôi
-            </Link>
-            <Link
-              to="/profile"
-              onClick={handleNavLinkClick}
-              className="block w-full py-2 px-3 hover:bg-gray-100 rounded"
-            >
-              Hồ sơ cá nhân
-            </Link>
-            {user.role === "admin" && (
+              {/* Mobile Links */}
               <Link
-                to="/admin"
+                to="/"
                 onClick={handleNavLinkClick}
-                className="block w-full py-2 px-3 hover:bg-gray-100 rounded"
+                className="block py-3 text-base font-medium text-gray-700 hover:text-gray-900"
               >
-                Quản trị viên
+                Trang chủ
               </Link>
-            )}
-            <button
-              onClick={handleLogout}
-              className="block w-full text-left py-2 px-3 text-red-600 hover:bg-red-50 rounded"
-            >
-              Đăng xuất
-            </button>
-          </>
-        ) : (
-          <Link
-            to="/login"
-            onClick={handleNavLinkClick}
-            className="cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm"
-          >
-            Đăng nhập
-          </Link>
-        )}
-      </div>
-    </nav>
+              <Link
+                to="/catalog"
+                onClick={handleNavLinkClick}
+                className="block py-3 text-base font-medium text-gray-700 hover:text-gray-900"
+              >
+                Sản phẩm
+              </Link>
+
+              {user && (
+                <>
+                  <div className="border-t border-gray-200 pt-4 mt-4" />
+                  <Link
+                    to="/my-orders"
+                    onClick={handleNavLinkClick}
+                    className="block py-3 text-base font-medium text-gray-700 hover:text-gray-900"
+                  >
+                    Đơn hàng của tôi
+                  </Link>
+                  <Link
+                    to="/profile"
+                    onClick={handleNavLinkClick}
+                    className="block py-3 text-base font-medium text-gray-700 hover:text-gray-900"
+                  >
+                    Hồ sơ cá nhân
+                  </Link>
+                  {user.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      onClick={handleNavLinkClick}
+                      className="block py-3 text-base font-medium text-gray-700 hover:text-gray-900"
+                    >
+                      Quản trị viên
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left py-3 text-base font-medium text-red-600 hover:text-red-700"
+                  >
+                    Đăng xuất
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

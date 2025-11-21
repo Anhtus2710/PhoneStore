@@ -9,10 +9,12 @@ import {
   deleteProduct,
   getFeaturedProducts,
   setProductFeatured,
+  searchProducts,
 } from "../controllers/productController.js";
 import upload from "../middleware/uploadMiddleware.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 import { sanitizeUpdate } from "../middleware/sanitizeUpdate.js";
+import { validateObjectId } from "../middleware/validateObjectId.js";
 
 const router = Router();
 
@@ -21,6 +23,8 @@ router.get("/", getProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/slug/:slug", getProductBySlug);
 router.get("/:id", getProductById);
+router.get("/:id", validateObjectId("id"), getProductById);
+router.get("/search", searchProducts);
 
 /** Admin: create / update / delete */
 // Nếu có upload ảnh: dùng upload.single("image")

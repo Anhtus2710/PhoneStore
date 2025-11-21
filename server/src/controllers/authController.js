@@ -1,8 +1,9 @@
-import bcrypt from "bcryptjs";
+// src/controllers/authController.js
+// import bcrypt from "bcryptjs"; // <-- XÓA DÒNG NÀY
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 
-// Đăng ký
+// Đăng ký (ĐÃ SỬA)
 export const registerUser = async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
@@ -11,11 +12,11 @@ export const registerUser = async (req, res, next) => {
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: "Email đã tồn tại" });
 
-    // mã hóa mật khẩu
-    const hash = await bcrypt.hash(password, 10);
+    // SỬA Ở ĐÂY: Không mã hóa tại đây
+    // const hash = await bcrypt.hash(password, 10); // <-- XÓA
 
-    // tạo user mới
-    const user = await User.create({ email, password: hash, name });
+    // tạo user mới (gửi mật khẩu plain text, model sẽ tự mã hóa)
+    const user = await User.create({ email, password: password, name }); // <-- SỬA
 
     res.status(201).json({ message: "Đăng ký thành công" });
   } catch (e) {
@@ -23,7 +24,7 @@ export const registerUser = async (req, res, next) => {
   }
 };
 
-// Đăng nhập
+// Đăng nhập (ĐÃ SỬA)
 export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -32,7 +33,8 @@ export const loginUser = async (req, res, next) => {
     if (!user)
       return res.status(400).json({ message: "Sai email hoặc mật khẩu" });
 
-    const ok = await bcrypt.compare(password, user.password);
+    // SỬA Ở ĐÂY: Dùng hàm 'matchPassword' của model (đã định nghĩa trong User.js)
+    const ok = await user.matchPassword(password); // <-- SỬA
     if (!ok)
       return res.status(400).json({ message: "Sai email hoặc mật khẩu" });
 
@@ -48,6 +50,19 @@ export const loginUser = async (req, res, next) => {
         role: user.role,
       },
     });
+  } catch (e) {
+    next(e);
+  }
+};
+
+// Hàm lấy thông tin user (thêm vào nếu bạn chưa có)
+export const me = async (req, res, next) => {
+  try {
+    // req.user đã được gán bởi middleware 'protect'
+    if (!req.user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+    }
+    res.json(req.user);
   } catch (e) {
     next(e);
   }
